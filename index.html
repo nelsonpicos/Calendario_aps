@@ -86,10 +86,10 @@
     </style>
 </head>
 <body>
-<div id="app"><div class="loading">A carregar interface...</div></div>
+<div id="app"><div class="loading">Iniciando agenda com segurança...</div></div>
 
 <script>
-    // Inicialização tradicional estável (Padrão Namespacing)
+    // Inicialização tradicional estável (Evita loops de rede e erros de CORS no GitHub)
     const firebaseConfig = {
         apiKey: "AIzaSyBLIWcjvXouacuZ-WGJncY-ixbqqbRQMSM",
         authDomain: "agenda-calendario-aps.firebaseapp.com",
@@ -99,7 +99,7 @@
         appId: "1:174124394971:web:14d13869040f1450b55ffe"
     };
     
-    // Força a inicialização global sem depender de escopo de módulos externos
+    // Inicia utilizando a janela global direta
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -410,7 +410,7 @@
     
     function renderMainApp() {
         document.getElementById('app').innerHTML = `
-            <div class="app-container"><div class="page-main-title"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><div class="user-info"><div class="user-avatar">${currentUser?.displayName?.charAt(0) || 'U'}</div><span>${currentUser?.displayName || currentUser?.email}</span><button class="logout-btn" id="logoutBtn">Sair</button></div></div><div class="main-calendar"><div class="toolbar"><div class="view-buttons"><button class="view-btn ${currentView === 'month' ? 'active' : ''}" data-view="month">📆 Mês</button><button class="view-btn ${currentView === 'quarter' ? 'active' : ''}" data-view="quarter">📚 Trimestre</button><button class="view-btn ${currentView === 'year' ? 'active' : ''}" data-view="year">🗓️ Ano</button><button class="view-btn ${currentView === 'timeline' ? 'active' : ''}" data-view="timeline">⏱️ Linha do Tempo</button></div><div class="action-buttons"><button class="action-btn" id="btnFeriado">➕ Feriado</button><button class="action-btn" id="btnEvento">📌 + Evento</button><button class="action-btn" id="btnCadastro">📋 Cadastros</button><button class="action-btn toggle-btn ${showHolidays ? 'active-toggle' : ''}" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button><button class="action-btn toggle-btn ${showPersonalEvents ? 'active-toggle' : ''}" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Eventos</button><button class="action-btn" id="btnPDF">📄 Gerar PDF</button></div></div><div id="dynamicViewContainer"></div><footer>Dados sincronizados e protegidos na nuvem</footer></div></div>
+            <div class="app-container"><div class="page-main-title"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><div class="user-info"><div class="user-avatar">${currentUser?.displayName?.charAt(0) || 'U'}</div><span>${currentUser?.displayName || currentUser?.email}</span><button class="logout-btn" id="logoutBtn">Sair</button></div></div><div class="main-calendar"><div class="toolbar"><div class="view-buttons"><button class="view-btn ${currentView === 'month' ? 'active' : ''}" data-view="month">📆 Mês</button><button class="view-btn ${currentView === 'quarter' ? 'active' : ''}" data-view="quarter">📚 Trimestre</button><button class="view-btn ${currentView === 'year' ? 'active' : ''}" data-view="year">🗓️ Ano</button><button class="view-btn ${currentView === 'timeline' ? 'active' : ''}" data-view="timeline">⏱️ Linha do Tempo</button></div><div class="action-buttons"><button class="action-btn" id="btnFeriado">➕ Feriado</button><button class="action-btn" id="btnEvento">📌 + Evento</button><button class="action-btn" id="btnCadastro">📋 Cadastros</button><button class="action-btn toggle-btn ${showHolidays ? 'active-toggle' : ''}" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button><button class="action-btn toggle-btn ${showPersonalEvents ? 'active-toggle' : ''}" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Eventos</button><button class="action-btn" id="btnPDF">📄 Gerar PDF</button></div></div><div id="dynamicViewContainer"></div><footer>Dados sincronizados na nuvem</footer></div></div>
         `;
         document.querySelectorAll('.view-btn').forEach(btn => btn.onclick = () => { currentView = btn.dataset.view; if (currentView === 'timeline') timelineYear = currentYear; renderMainApp(); });
         document.getElementById('logoutBtn').onclick = async () => { 
@@ -432,7 +432,7 @@
     }
     
     function renderLoginScreen() {
-        document.getElementById('app').innerHTML = `<div class="login-overlay"><div class="login-card"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><p>Gestão integrada de calendários e equipas</p><button class="google-btn" id="googleLoginBtn">🔐 Entrar com Conta Google</button><p style="font-size:0.7rem; margin-top:20px; color: #6c757d;">Acesso seguro e encriptado</p></div></div>`;
+        document.getElementById('app').innerHTML = `<div class="login-overlay"><div class="login-card"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><p>Gestão integrada de agendas</p><button class="google-btn" id="googleLoginBtn">🔐 Entrar com Conta Google</button><p style="font-size:0.7rem; margin-top:20px; color: #6c757d;">Acesso seguro via Google Auth</p></div></div>`;
         
         const btn = document.getElementById('googleLoginBtn');
         if(!btn) return;
@@ -452,7 +452,7 @@
         };
     }
     
-    // Escuta direta e instantânea do estado de autenticação
+    // Escuta direta do estado de login
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             lockAuthStream = false;
