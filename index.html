@@ -4,525 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>AGENDA DE FÉRIAS DA APS - Calendário</title>
-    
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
-        }
-        body {
-            background: #e9f0f5;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        /* TELA DE LOGIN */
-        .login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-        .login-card {
-            background: white;
-            border-radius: 48px;
-            padding: 48px;
-            text-align: center;
-            max-width: 450px;
-            width: 90%;
-        }
-        .login-card h1 {
-            color: #1b5e7a;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-        .google-btn {
-            background: #4285f4;
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-            margin-top: 20px;
-        }
-        .google-btn:hover {
-            background: #3367d6;
-        }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-        
-        /* APP PRINCIPAL */
-        .app-container {
-            max-width: 1400px;
-            width: 100%;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .page-main-title {
-            background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%);
-            color: white;
-            padding: 20px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .page-main-title h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(255,255,255,0.2);
-            padding: 8px 18px;
-            border-radius: 50px;
-        }
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #1b5e7a;
-        }
-        .logout-btn {
-            background: white;
-            color: #1b5e7a;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-        .main-calendar {
-            padding: 24px 28px;
-        }
-        
-        /* BARRA DE FERRAMENTAS */
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e2edf2;
-        }
-        .view-buttons, .action-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .view-btn, .action-btn {
-            background: white;
-            color: #1e4a6e;
-            border: 1px solid #cbd5e1;
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .view-btn.active, .action-btn.active-toggle {
-            background: #2c7da0;
-            color: white;
-            border-color: #2c7da0;
-        }
-        .action-btn:hover, .view-btn:hover {
-            background: #f1f5f9;
-        }
-        
-        /* CALENDÁRIO MÊS */
-        .calendar-header {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
-            font-weight: bold;
-            background: #6c757d;
-            color: white;
-            border-radius: 16px;
-            padding: 12px 0;
-            margin-bottom: 12px;
-        }
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-        }
-        .calendar-day {
-            background: white;
-            border: 2px solid #dee2e6;
-            border-radius: 12px;
-            min-height: 100px;
-            padding: 8px 6px;
-            cursor: pointer;
-            transition: 0.1s;
-        }
-        .calendar-day:hover {
-            background: #f8fafc;
-            transform: scale(0.98);
-        }
-        .calendar-day.other-month {
-            background: #fafcff;
-            color: #94a3b8;
-        }
-        .day-number {
-            font-weight: bold;
-            font-size: 1rem;
-            margin-bottom: 8px;
-            text-align: right;
-        }
-        .event-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 0.7rem;
-        }
-        .event-item {
-            border-radius: 14px;
-            padding: 2px 6px;
-            background: #f1f5f9;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .bar-event {
-            color: white;
-            border-radius: 20px;
-            font-weight: 500;
-        }
-        .month-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        .month-nav button, .quarter-nav button, .year-selector button {
-            background: #6c757d;
-            color: white;
-            font-size: 1rem;
-            padding: 8px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            border: none;
-        }
-        .current-month {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #212529;
-        }
-        
-        /* TRIMESTRE */
-        .quarter-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-        .quarter-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        
-        /* ANO */
-        .year-view-container {
-            overflow-x: auto;
-            width: 100%;
-        }
-        .year-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(350px, 1fr));
-            gap: 20px;
-        }
-        .single-month-grid {
-            background: white;
-            border-radius: 20px;
-            padding: 15px;
-            border: 1px solid #dee2e6;
-        }
-        .single-month-title {
-            font-size: 1rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #6c757d;
-        }
-        .small-calendar-header {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.7rem;
-            background: #6c757d;
-            color: white;
-            border-radius: 10px;
-            padding: 6px 0;
-            margin-bottom: 8px;
-        }
-        .small-calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-        }
-        .small-calendar-day {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            min-height: 55px;
-            padding: 4px;
-            cursor: pointer;
-            background: white;
-        }
-        .small-calendar-day.other-month {
-            background: #fafcff;
-            color: #94a3b8;
-        }
-        .small-day-number {
-            font-weight: bold;
-            font-size: 0.7rem;
-            text-align: right;
-        }
-        .small-event-item {
-            background: #e8a0a0;
-            border-radius: 4px;
-            padding: 1px 3px;
-            margin: 1px 0;
-            font-size: 0.6rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        /* LINHA DO TEMPO */
-        .timeline-wrapper {
-            overflow-x: auto;
-            max-height: 70vh;
-            border-radius: 20px;
-            border: 1px solid #dee2e6;
-            background: white;
-        }
-        .timeline-months {
-            display: flex;
-        }
-        .timeline-month-col {
-            border-right: 3px solid #6c757d;
-            min-width: 500px;
-        }
-        .timeline-month-header {
-            background: #6c757d;
-            color: white;
-            padding: 12px 16px;
-            font-weight: bold;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 20;
-        }
-        .timeline-day-row {
-            display: flex;
-        }
-        .timeline-day-cell {
-            width: 70px;
-            min-width: 70px;
-            padding: 10px 4px;
-            text-align: center;
-            border-right: 1px solid #e9ecef;
-            cursor: pointer;
-        }
-        .timeline-day-cell.weekend {
-            background: #f8f0e6;
-        }
-        .timeline-day-cell.today {
-            background: #b8e1fc;
-            font-weight: bold;
-        }
-        .timeline-event-badge {
-            background: #e8a0a0;
-            border-radius: 10px;
-            padding: 2px 5px;
-            font-size: 0.55rem;
-            white-space: nowrap;
-            display: inline-block;
-            margin: 1px;
-        }
-        
-        /* MODAL */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        .modal-container {
-            background: white;
-            border-radius: 32px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 85vh;
-            overflow: hidden;
-        }
-        .modal-tabs {
-            display: flex;
-            border-bottom: 2px solid #e2edf2;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 16px;
-            background: #f8fafc;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .tab-btn.active {
-            background: white;
-            color: #2c7da0;
-            border-bottom: 3px solid #2c7da0;
-        }
-        .tab-content {
-            padding: 20px;
-            overflow-y: auto;
-            max-height: 60vh;
-        }
-        .tab-pane {
-            display: none;
-        }
-        .tab-pane.active {
-            display: block;
-        }
-        .event-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            border-bottom: 1px solid #edf2f7;
-            margin-bottom: 8px;
-        }
-        .event-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .edit-event-btn {
-            background: #f0c8a0;
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-        }
-        .delete-event-btn {
-            background: #f0b8b8;
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .form-group label {
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        .form-group input, .form-group select {
-            padding: 8px 12px;
-            border-radius: 12px;
-            border: 1px solid #cbd5e1;
-        }
-        .color-palette {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 5px;
-        }
-        .palette-swatch {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-        .palette-swatch.selected {
-            border: 3px solid #0f3b5f;
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 15px;
-        }
-        .btn-save {
-            background: #2c7da0;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-cancel {
-            background: #e2e8f0;
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-        }
-        .year-selector {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        footer {
-            text-align: center;
-            font-size: 0.7rem;
-            padding: 12px;
-            color: #5c6f87;
-        }
+        * { box-sizing: border-box; font-family: system-ui, 'Segoe UI', sans-serif; }
+        body { background: #e9f0f5; margin: 0; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        .login-card { background: white; border-radius: 48px; padding: 48px; text-align: center; max-width: 450px; width: 90%; }
+        .login-card h1 { color: #1b5e7a; margin-bottom: 20px; }
+        .google-btn { background: #4285f4; color: white; border: none; padding: 14px 28px; border-radius: 40px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-top: 20px; }
+        .google-btn:hover { background: #3367d6; }
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .app-container { max-width: 1400px; width: 100%; background: white; border-radius: 32px; box-shadow: 0 20px 35px rgba(0,0,0,0.1); overflow: hidden; }
+        .page-main-title { background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); color: white; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .user-info { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.2); padding: 8px 18px; border-radius: 50px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1b5e7a; }
+        .logout-btn { background: white; color: #1b5e7a; border: none; padding: 6px 16px; border-radius: 30px; cursor: pointer; }
+        .main-calendar { padding: 24px 28px; }
+        .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e2edf2; }
+        .view-buttons, .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .view-btn, .action-btn { background: white; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+        .view-btn.active, .action-btn.active-toggle { background: #2c7da0; color: white; }
+        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; background: #6c757d; color: white; border-radius: 16px; padding: 12px 0; margin-bottom: 12px; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .calendar-day { background: white; border: 2px solid #dee2e6; border-radius: 12px; min-height: 100px; padding: 8px 6px; cursor: pointer; }
+        .calendar-day:hover { background: #f8fafc; }
+        .calendar-day.other-month { background: #fafcff; color: #94a3b8; }
+        .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 8px; text-align: right; }
+        .event-list { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; }
+        .event-item { border-radius: 14px; padding: 2px 6px; background: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bar-event { color: white; border-radius: 20px; font-weight: 500; }
+        .month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .month-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; border: none; }
+        .current-month { font-size: 1.5rem; font-weight: bold; color: #212529; }
+        .quarter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .quarter-nav { display: flex; justify-content: space-between; margin-bottom: 24px; }
+        .year-view-container { overflow-x: auto; }
+        .year-grid { display: grid; grid-template-columns: repeat(2, minmax(350px, 1fr)); gap: 20px; }
+        .single-month-grid { background: white; border-radius: 20px; padding: 15px; border: 1px solid #dee2e6; }
+        .single-month-title { font-size: 1rem; font-weight: bold; text-align: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #6c757d; }
+        .small-calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.7rem; background: #6c757d; color: white; border-radius: 10px; padding: 6px 0; margin-bottom: 8px; }
+        .small-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .small-calendar-day { border: 1px solid #dee2e6; border-radius: 8px; min-height: 55px; padding: 4px; cursor: pointer; background: white; }
+        .small-calendar-day.other-month { background: #fafcff; color: #94a3b8; }
+        .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; }
+        .small-event-item { background: #e8a0a0; border-radius: 4px; padding: 1px 3px; margin: 1px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-container { background: white; border-radius: 32px; width: 90%; max-width: 600px; max-height: 85vh; overflow: hidden; }
+        .modal-tabs { display: flex; border-bottom: 2px solid #e2edf2; }
+        .tab-btn { flex: 1; padding: 16px; background: #f8fafc; border: none; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { background: white; color: #2c7da0; border-bottom: 3px solid #2c7da0; }
+        .tab-content { padding: 20px; overflow-y: auto; max-height: 60vh; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+        .event-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #edf2f7; margin-bottom: 8px; }
+        .event-actions { display: flex; gap: 8px; }
+        .edit-event-btn { background: #f0c8a0; padding: 4px 12px; border-radius: 20px; border: none; cursor: pointer; }
+        .delete-event-btn { background: #f0b8b8; padding: 4px 12px; border-radius: 20px; border: none; cursor: pointer; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .color-palette { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+        .palette-swatch { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .palette-swatch.selected { border: 3px solid #0f3b5f; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
+        .btn-save { background: #2c7da0; color: white; padding: 10px 20px; border-radius: 30px; border: none; cursor: pointer; }
+        .btn-cancel { background: #e2e8f0; padding: 10px 20px; border-radius: 30px; border: none; cursor: pointer; }
+        .year-selector { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        footer { text-align: center; font-size: 0.7rem; padding: 12px; color: #5c6f87; }
     </style>
 </head>
 <body>
-<div id="app">
-    <div class="loading">Carregando...</div>
-</div>
+<div id="app"><div class="loading">Carregando...</div></div>
 
 <script type="module">
-    // ==================== FIREBASE CONFIG ====================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
@@ -540,10 +91,8 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
-    
     provider.setCustomParameters({ prompt: 'select_account' });
     
-    // ==================== DADOS ====================
     let currentUser = null;
     let events = [];
     let currentView = "month";
@@ -553,10 +102,7 @@
     let showPersonalEvents = true;
     let timelineYear = 2026;
     
-    const SOFT_COLORS = [
-        "#e8a0a0", "#d4a8e8", "#a8d4e8", "#b8e0b8", "#f0d8a0",
-        "#e8c8a0", "#c8b8e8", "#a0e8d4", "#f0a8c8", "#d0e0a0"
-    ];
+    const SOFT_COLORS = ["#e8a0a0", "#d4a8e8", "#a8d4e8", "#b8e0b8", "#f0d8a0", "#e8c8a0", "#c8b8e8", "#a0e8d4", "#f0a8c8", "#d0e0a0"];
     
     const DEFAULT_HOLIDAYS = [
         { id: 1, name: "Confraternização Universal", type: "national", start: "2026-01-01", end: "2026-01-01", repeatType: "permanent", color: "#e8a0a0" },
@@ -569,87 +115,29 @@
         { id: 8, name: "Natal", type: "national", start: "2026-12-25", end: "2026-12-25", repeatType: "permanent", color: "#e8a0a0" }
     ];
     
-    // ==================== FUNÇÕES DO BANCO ====================
     async function loadUserEvents(userId) {
-        try {
-            const userDocRef = doc(db, "users", userId);
-            const docSnap = await getDoc(userDocRef);
-            if (docSnap.exists()) {
-                events = docSnap.data().events || [];
-            } else {
-                events = [...DEFAULT_HOLIDAYS];
-                await setDoc(userDocRef, { events: events });
-            }
-            renderCurrentView();
-            renderCadastroList();
-        } catch (error) {
-            console.error("Erro ao carregar eventos:", error);
+        const userDocRef = doc(db, "users", userId);
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+            events = docSnap.data().events || [];
+        } else {
             events = [...DEFAULT_HOLIDAYS];
-            renderCurrentView();
+            await setDoc(userDocRef, { events: events });
         }
+        renderCurrentView();
+        renderCadastroList();
     }
     
-    async function saveEvent(event) {
-        if (!currentUser) return;
-        try {
-            const userDocRef = doc(db, "users", currentUser.uid);
-            await updateDoc(userDocRef, { events: arrayUnion(event) });
-        } catch (error) {
-            console.error("Erro ao salvar evento:", error);
-        }
-    }
-    
-    async function updateEventInCloud(eventId, updatedEvent) {
-        if (!currentUser) return;
-        try {
-            const userDocRef = doc(db, "users", currentUser.uid);
-            const docSnap = await getDoc(userDocRef);
-            if (docSnap.exists()) {
-                let currentEvents = docSnap.data().events || [];
-                const index = currentEvents.findIndex(e => e.id == eventId);
-                if (index !== -1) {
-                    currentEvents[index] = { ...currentEvents[index], ...updatedEvent };
-                    await setDoc(userDocRef, { events: currentEvents });
-                }
-            }
-        } catch (error) {
-            console.error("Erro ao atualizar evento:", error);
-        }
-    }
-    
-    async function deleteEventFromCloud(eventId) {
-        if (!currentUser) return;
-        try {
-            const userDocRef = doc(db, "users", currentUser.uid);
-            const docSnap = await getDoc(userDocRef);
-            if (docSnap.exists()) {
-                const currentEvents = docSnap.data().events || [];
-                const eventToRemove = currentEvents.find(e => e.id == eventId);
-                if (eventToRemove) {
-                    await updateDoc(userDocRef, { events: arrayRemove(eventToRemove) });
-                }
-            }
-        } catch (error) {
-            console.error("Erro ao deletar evento:", error);
-        }
-    }
-    
-    // ==================== FUNÇÕES LOCAIS ====================
     function getEventsForDate(year, month, day) {
         return events.filter(ev => {
             if (ev.type === 'national' && !showHolidays) return false;
             if (ev.type !== 'national' && !showPersonalEvents) return false;
-            
             if (ev.repeatType === 'permanent') {
-                const s = new Date(ev.start);
-                const e = new Date(ev.end);
+                const s = new Date(ev.start), e = new Date(ev.end);
                 const startComp = new Date(year, s.getMonth(), s.getDate());
                 const endComp = new Date(year, e.getMonth(), e.getDate());
                 const targetDate = new Date(year, month, day);
-                
-                if (ev.start === ev.end) {
-                    return startComp.getMonth() === month && startComp.getDate() === day;
-                }
+                if (ev.start === ev.end) return startComp.getMonth() === month && startComp.getDate() === day;
                 return targetDate >= startComp && targetDate <= endComp;
             } else {
                 const targetDateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
@@ -662,24 +150,15 @@
     async function addEvent(event) {
         event.id = Date.now();
         events.push(event);
-        await saveEvent(event);
+        if (currentUser) await updateDoc(doc(db, "users", currentUser.uid), { events: arrayUnion(event) });
         renderCurrentView();
         renderCadastroList();
     }
     
-    async function updateEvent(id, updatedEvent) {
-        const index = events.findIndex(e => e.id == id);
-        if (index !== -1) {
-            events[index] = { ...events[index], ...updatedEvent };
-            await updateEventInCloud(id, updatedEvent);
-            renderCurrentView();
-            renderCadastroList();
-        }
-    }
-    
     async function deleteEvent(id) {
+        const eventToRemove = events.find(e => e.id == id);
         events = events.filter(e => e.id != id);
-        await deleteEventFromCloud(id);
+        if (currentUser && eventToRemove) await updateDoc(doc(db, "users", currentUser.uid), { events: arrayRemove(eventToRemove) });
         renderCurrentView();
         renderCadastroList();
     }
@@ -687,578 +166,208 @@
     function showDetailModal(dateStr, eventsOfDay) {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        const eventsHtml = eventsOfDay.length 
-            ? eventsOfDay.map(ev => `<li style="margin:8px 0; border-left:4px solid ${ev.color}; padding-left:8px;"><strong>${ev.name}</strong> (${ev.type === 'national' ? 'Feriado' : 'Evento'})</li>`).join('')
-            : '<li>Nenhum evento cadastrado</li>';
-        modal.innerHTML = `
-            <div class="modal-container" style="max-width:400px;">
-                <div style="padding:16px 20px; border-bottom:1px solid #e2edf2;">
-                    <h3>📅 ${dateStr}</h3>
-                </div>
-                <div style="padding:20px;">
-                    <ul>${eventsHtml}</ul>
-                    <button class="btn-cancel" id="closeModalBtn" style="width:100%;">Fechar</button>
-                </div>
-            </div>
-        `;
+        modal.innerHTML = `<div class="modal-container" style="max-width:400px;"><div style="padding:16px 20px;"><h3>📅 ${dateStr}</h3></div><div style="padding:20px;"><ul>${eventsOfDay.length ? eventsOfDay.map(ev => `<li style="border-left:4px solid ${ev.color}; padding-left:8px;"><strong>${ev.name}</strong></li>`).join('') : '<li>Nenhum evento</li>'}</ul><button class="btn-cancel" id="closeModalBtn" style="width:100%;">Fechar</button></div></div>`;
         document.body.appendChild(modal);
-        modal.querySelector('#closeModalBtn')?.addEventListener('click', () => modal.remove());
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+        modal.querySelector('#closeModalBtn')?.onclick = () => modal.remove();
     }
     
-    // ==================== RENDERIZAÇÃO DO CALENDÁRIO ====================
     function renderMonthView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-        const header = `
-            <div class="month-nav">
-                <button id="prevMonthBtn">◀ Mês anterior</button>
-                <span class="current-month">${monthNames[currentMonth]} ${currentYear}</span>
-                <button id="nextMonthBtn">Próximo mês ▶</button>
-            </div>
+        document.getElementById('dynamicViewContainer').innerHTML = `
+            <div class="month-nav"><button id="prevMonthBtn">◀</button><span class="current-month">${monthNames[currentMonth]} ${currentYear}</span><button id="nextMonthBtn">▶</button></div>
             <div id="monthGrid"></div>
         `;
-        document.getElementById('dynamicViewContainer').innerHTML = header;
-        renderMonthGrid(currentYear, currentMonth, 'monthGrid');
-        
-        document.getElementById('prevMonthBtn')?.addEventListener('click', () => {
-            const d = new Date(currentYear, currentMonth - 1, 1);
-            currentYear = d.getFullYear();
-            currentMonth = d.getMonth();
-            renderMonthView();
-        });
-        document.getElementById('nextMonthBtn')?.addEventListener('click', () => {
-            const d = new Date(currentYear, currentMonth + 1, 1);
-            currentYear = d.getFullYear();
-            currentMonth = d.getMonth();
-            renderMonthView();
-        });
-    }
-    
-    function renderMonthGrid(year, month, containerId) {
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const prevDays = new Date(year, month, 0).getDate();
-        const cells = [];
-        
-        for (let i = firstDay - 1; i >= 0; i--) {
-            cells.push({ day: prevDays - i, current: false, date: new Date(year, month - 1, prevDays - i) });
-        }
-        for (let d = 1; d <= daysInMonth; d++) {
-            cells.push({ day: d, current: true, date: new Date(year, month, d) });
-        }
-        let remaining = 42 - cells.length;
-        for (let i = 1; i <= remaining; i++) {
-            cells.push({ day: i, current: false, date: new Date(year, month + 1, i) });
-        }
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const prevDays = new Date(currentYear, currentMonth, 0).getDate();
+        let cells = [];
+        for (let i = firstDay - 1; i >= 0; i--) cells.push({ day: prevDays - i, current: false, date: new Date(currentYear, currentMonth - 1, prevDays - i) });
+        for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, current: true, date: new Date(currentYear, currentMonth, d) });
+        for (let i = cells.length; i < 42; i++) cells.push({ day: i - cells.length + 1, current: false, date: new Date(currentYear, currentMonth + 1, i - cells.length + 1) });
         
         let html = `<div class="calendar-header"><div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div></div><div class="calendar-grid">`;
         for (const cell of cells) {
             const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
             const evs = getEventsForDate(y, m, d);
             let evHtml = '';
-            for (const ev of evs) {
-                const isRange = ev.start !== ev.end;
-                if (isRange) {
-                    evHtml += `<div class="event-item bar-event" style="background:${ev.color};">📅 ${ev.name}</div>`;
-                } else {
-                    evHtml += `<div class="event-item" style="background:${ev.color}30; border-left:3px solid ${ev.color};">${ev.name}</div>`;
-                }
-            }
-            const cls = cell.current ? '' : 'other-month';
-            html += `<div class="calendar-day ${cls}" data-year="${y}" data-month="${m}" data-day="${d}">
-                        <div class="day-number">${d}</div>
-                        <div class="event-list">${evHtml || '<span style="font-size:0.6rem; color:#aaa;">—</span>'}</div>
-                     </div>`;
+            for (const ev of evs) evHtml += `<div class="event-item ${ev.start !== ev.end ? 'bar-event' : ''}" style="background:${ev.start !== ev.end ? ev.color : ev.color + '30'}">${ev.name}</div>`;
+            html += `<div class="calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="day-number">${d}</div><div class="event-list">${evHtml || '—'}</div></div>`;
         }
-        html += `</div>`;
-        document.getElementById(containerId).innerHTML = html;
-        
-        document.querySelectorAll('.calendar-day').forEach(el => {
-            el.addEventListener('click', () => {
-                const y = parseInt(el.dataset.year), m = parseInt(el.dataset.month), d = parseInt(el.dataset.day);
-                const evs = getEventsForDate(y, m, d);
-                showDetailModal(`${y}-${m+1}-${d}`, evs);
-            });
-        });
+        document.getElementById('monthGrid').innerHTML = html + `</div>`;
+        document.querySelectorAll('.calendar-day').forEach(el => el.addEventListener('click', () => {
+            const y = parseInt(el.dataset.year), m = parseInt(el.dataset.month), d = parseInt(el.dataset.day);
+            showDetailModal(`${y}-${m+1}-${d}`, getEventsForDate(y, m, d));
+        }));
+        document.getElementById('prevMonthBtn').onclick = () => { let d = new Date(currentYear, currentMonth - 1, 1); currentYear = d.getFullYear(); currentMonth = d.getMonth(); renderMonthView(); };
+        document.getElementById('nextMonthBtn').onclick = () => { let d = new Date(currentYear, currentMonth + 1, 1); currentYear = d.getFullYear(); currentMonth = d.getMonth(); renderMonthView(); };
     }
     
     function renderQuarterView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-        const months = [];
-        for (let i = 0; i < 3; i++) {
-            let monthIdx = currentMonth + i;
-            let year = currentYear;
-            if (monthIdx >= 12) {
-                monthIdx -= 12;
-                year++;
-            }
-            months.push({ year, month: monthIdx, name: monthNames[monthIdx] });
-        }
-        
-        const header = `
-            <div class="quarter-nav">
-                <button id="prevMonthQuarterBtn">◀ Mês anterior</button>
-                <span class="current-quarter">${monthNames[currentMonth]} ${currentYear} • ${months[months.length-1].name} ${months[months.length-1].year}</span>
-                <button id="nextMonthQuarterBtn">Próximo mês ▶</button>
-            </div>
-            <div class="quarter-grid" id="quarterGrid"></div>
-        `;
-        document.getElementById('dynamicViewContainer').innerHTML = header;
-        
+        document.getElementById('dynamicViewContainer').innerHTML = `<div class="quarter-nav"><button id="prevQuarterBtn">◀</button><span>${monthNames[currentMonth]} ${currentYear}</span><button id="nextQuarterBtn">▶</button></div><div class="quarter-grid" id="quarterGrid"></div>`;
         const grid = document.getElementById('quarterGrid');
         grid.innerHTML = '';
-        for (const m of months) {
-            const monthDiv = document.createElement('div');
-            monthDiv.className = 'single-month-grid';
-            monthDiv.innerHTML = `<div class="single-month-title">${m.name.toUpperCase()} / ${m.year}</div>`;
-            monthDiv.innerHTML += renderSmallMonthGrid(m.year, m.month);
+        for (let i = 0; i < 3; i++) {
+            let monthIdx = currentMonth + i, year = currentYear;
+            if (monthIdx >= 12) { monthIdx -= 12; year++; }
+            const monthDiv = document.createElement('div'); monthDiv.className = 'single-month-grid';
+            monthDiv.innerHTML = `<div class="single-month-title">${monthNames[monthIdx].toUpperCase()} / ${year}</div>`;
+            const firstDay = new Date(year, monthIdx, 1).getDay();
+            const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+            const prevDays = new Date(year, monthIdx, 0).getDate();
+            let cells = [];
+            for (let i2 = firstDay - 1; i2 >= 0; i2--) cells.push({ day: prevDays - i2, current: false, date: new Date(year, monthIdx - 1, prevDays - i2) });
+            for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, current: true, date: new Date(year, monthIdx, d) });
+            for (let i2 = cells.length; i2 < 42; i2++) cells.push({ day: i2 - cells.length + 1, current: false, date: new Date(year, monthIdx + 1, i2 - cells.length + 1) });
+            let gridHtml = `<div class="small-calendar-header"><div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div></div><div class="small-calendar-grid">`;
+            for (const cell of cells) {
+                const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
+                const evs = getEventsForDate(y, m, d);
+                let evHtml = '';
+                for (const ev of evs) evHtml += `<div class="small-event-item" style="background:${ev.color}40">${ev.name.substring(0,8)}</div>`;
+                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="small-day-number">${d}</div>${evHtml || ''}</div>`;
+            }
+            monthDiv.innerHTML += gridHtml + `</div>`;
             grid.appendChild(monthDiv);
         }
-        
-        attachSmallCalendarClicks();
-        document.getElementById('prevMonthQuarterBtn')?.addEventListener('click', () => {
-            const d = new Date(currentYear, currentMonth - 1, 1);
-            currentYear = d.getFullYear();
-            currentMonth = d.getMonth();
-            renderQuarterView();
-        });
-        document.getElementById('nextMonthQuarterBtn')?.addEventListener('click', () => {
-            const d = new Date(currentYear, currentMonth + 1, 1);
-            currentYear = d.getFullYear();
-            currentMonth = d.getMonth();
-            renderQuarterView();
-        });
+        document.querySelectorAll('.small-calendar-day').forEach(el => el.addEventListener('click', () => {
+            const y = parseInt(el.dataset.year), m = parseInt(el.dataset.month), d = parseInt(el.dataset.day);
+            showDetailModal(`${y}-${m+1}-${d}`, getEventsForDate(y, m, d));
+        }));
+        document.getElementById('prevQuarterBtn').onclick = () => { let d = new Date(currentYear, currentMonth - 1, 1); currentYear = d.getFullYear(); currentMonth = d.getMonth(); renderQuarterView(); };
+        document.getElementById('nextQuarterBtn').onclick = () => { let d = new Date(currentYear, currentMonth + 1, 1); currentYear = d.getFullYear(); currentMonth = d.getMonth(); renderQuarterView(); };
     }
     
     function renderYearView() {
-        let html = `<div class="year-view-container"><div class="year-grid">`;
+        let html = `<div class="year-grid">`;
         for (let m = 0; m < 12; m++) {
             const monthName = new Date(currentYear, m, 1).toLocaleString('pt-BR', { month: 'long' });
-            html += `<div class="single-month-grid">
-                        <div class="single-month-title">${monthName.toUpperCase()} / ${currentYear}</div>
-                        ${renderSmallMonthGrid(currentYear, m)}
-                     </div>`;
-        }
-        html += `</div></div>
-                 <div class="year-selector">
-                     <button id="prevYearBtn">◀ ${currentYear-1}</button>
-                     <span style="font-weight:bold; font-size:1.2rem;">${currentYear}</span>
-                     <button id="nextYearBtn">${currentYear+1} ▶</button>
-                 </div>`;
-        document.getElementById('dynamicViewContainer').innerHTML = html;
-        
-        document.getElementById('prevYearBtn')?.addEventListener('click', () => { currentYear--; renderYearView(); });
-        document.getElementById('nextYearBtn')?.addEventListener('click', () => { currentYear++; renderYearView(); });
-        attachSmallCalendarClicks();
-    }
-    
-    function renderSmallMonthGrid(year, month) {
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const prevDays = new Date(year, month, 0).getDate();
-        const cells = [];
-        
-        for (let i = firstDay - 1; i >= 0; i--) {
-            cells.push({ day: prevDays - i, current: false, date: new Date(year, month - 1, prevDays - i) });
-        }
-        for (let d = 1; d <= daysInMonth; d++) {
-            cells.push({ day: d, current: true, date: new Date(year, month, d) });
-        }
-        let remaining = 42 - cells.length;
-        for (let i = 1; i <= remaining; i++) {
-            cells.push({ day: i, current: false, date: new Date(year, month + 1, i) });
-        }
-        
-        let html = `<div class="small-calendar-header"><div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div></div><div class="small-calendar-grid">`;
-        for (const cell of cells) {
-            const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
-            const evs = getEventsForDate(y, m, d);
-            let evHtml = '';
-            for (const ev of evs) {
-                evHtml += `<div class="small-event-item" style="background:${ev.color}40; border-left:2px solid ${ev.color};">${ev.name.substring(0,12)}</div>`;
+            html += `<div class="single-month-grid"><div class="single-month-title">${monthName.toUpperCase()} / ${currentYear}</div>`;
+            const firstDay = new Date(currentYear, m, 1).getDay();
+            const daysInMonth = new Date(currentYear, m + 1, 0).getDate();
+            const prevDays = new Date(currentYear, m, 0).getDate();
+            let cells = [];
+            for (let i = firstDay - 1; i >= 0; i--) cells.push({ day: prevDays - i, current: false, date: new Date(currentYear, m - 1, prevDays - i) });
+            for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, current: true, date: new Date(currentYear, m, d) });
+            for (let i = cells.length; i < 42; i++) cells.push({ day: i - cells.length + 1, current: false, date: new Date(currentYear, m + 1, i - cells.length + 1) });
+            let gridHtml = `<div class="small-calendar-header"><div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div></div><div class="small-calendar-grid">`;
+            for (const cell of cells) {
+                const y = cell.date.getFullYear(), monthIdx = cell.date.getMonth(), d = cell.day;
+                const evs = getEventsForDate(y, monthIdx, d);
+                let evHtml = '';
+                for (const ev of evs) evHtml += `<div class="small-event-item" style="background:${ev.color}40">${ev.name.substring(0,8)}</div>`;
+                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${monthIdx}" data-day="${d}"><div class="small-day-number">${d}</div>${evHtml || ''}</div>`;
             }
-            const cls = cell.current ? '' : 'other-month';
-            html += `<div class="small-calendar-day ${cls}" data-year="${y}" data-month="${m}" data-day="${d}">
-                        <div class="small-day-number">${d}</div>
-                        <div>${evHtml || ''}</div>
-                     </div>`;
+            html += gridHtml + `</div></div>`;
         }
-        html += `</div>`;
-        return html;
-    }
-    
-    function attachSmallCalendarClicks() {
-        document.querySelectorAll('.small-calendar-day').forEach(el => {
-            el.addEventListener('click', () => {
-                const y = parseInt(el.dataset.year), m = parseInt(el.dataset.month), d = parseInt(el.dataset.day);
-                const evs = getEventsForDate(y, m, d);
-                showDetailModal(`${y}-${m+1}-${d}`, evs);
-            });
-        });
+        html += `</div><div class="year-selector"><button id="prevYearBtn">◀ ${currentYear-1}</button><span>${currentYear}</span><button id="nextYearBtn">${currentYear+1} ▶</button></div>`;
+        document.getElementById('dynamicViewContainer').innerHTML = html;
+        document.querySelectorAll('.small-calendar-day').forEach(el => el.addEventListener('click', () => {
+            const y = parseInt(el.dataset.year), m = parseInt(el.dataset.month), d = parseInt(el.dataset.day);
+            showDetailModal(`${y}-${m+1}-${d}`, getEventsForDate(y, m, d));
+        }));
+        document.getElementById('prevYearBtn').onclick = () => { currentYear--; renderYearView(); };
+        document.getElementById('nextYearBtn').onclick = () => { currentYear++; renderYearView(); };
     }
     
     function renderTimelineView() {
-        let monthsWithEvents = new Set();
-        events.forEach(ev => {
-            if (ev.repeatType === 'permanent' || parseInt(ev.start.split('-')[0]) === timelineYear) {
-                const s = new Date(ev.start), e = new Date(ev.end);
-                let sM = s.getMonth(), eM = e.getMonth();
-                if (ev.repeatType === 'permanent') { sM = 0; eM = 11; }
-                for (let m = sM; m <= eM; m++) monthsWithEvents.add(m);
-            }
-        });
-        
-        const sortedMonths = Array.from(monthsWithEvents).sort((a,b) => a - b);
-        if (sortedMonths.length === 0) {
-            document.getElementById('dynamicViewContainer').innerHTML = `<div style="padding:40px; text-align:center;">✨ Nenhum evento para ${timelineYear}. Adicione eventos para visualizar na linha do tempo.</div>
-                <div class="year-selector">
-                    <button id="timelinePrevYear">◀ ${timelineYear-1}</button>
-                    <span style="font-weight:bold; font-size:1.2rem;">${timelineYear}</span>
-                    <button id="timelineNextYear">${timelineYear+1} ▶</button>
-                </div>`;
-            document.getElementById('timelinePrevYear')?.addEventListener('click', () => { timelineYear--; renderTimelineView(); });
-            document.getElementById('timelineNextYear')?.addEventListener('click', () => { timelineYear++; renderTimelineView(); });
-            return;
-        }
-        
-        const today = new Date();
-        let html = `<div class="timeline-wrapper"><div class="timeline-container"><div class="timeline-months">`;
-        for (const monthIdx of sortedMonths) {
-            const daysInMonth = new Date(timelineYear, monthIdx + 1, 0).getDate();
-            const monthName = new Date(timelineYear, monthIdx, 1).toLocaleString('pt-BR', { month: 'long' });
-            html += `<div class="timeline-month-col" style="min-width:${daysInMonth * 75}px;">
-                        <div class="timeline-month-header">${monthName.toUpperCase()} / ${timelineYear}</div>
-                        <div class="timeline-days">
-                            <div class="timeline-day-row" style="display:flex;">`;
-            for (let d = 1; d <= daysInMonth; d++) {
-                const weekday = new Date(timelineYear, monthIdx, d).getDay();
-                const isWeekend = (weekday === 0 || weekday === 6);
-                const isToday = (timelineYear === today.getFullYear() && monthIdx === today.getMonth() && d === today.getDate());
-                const eventsDay = getEventsForDate(timelineYear, monthIdx, d);
-                let eventBadges = '';
-                for (const ev of eventsDay) {
-                    eventBadges += `<div class="timeline-event-badge" style="background:${ev.color};">${ev.name}</div>`;
-                }
-                html += `<div class="timeline-day-cell ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''}" data-year="${timelineYear}" data-month="${monthIdx}" data-day="${d}">
-                            <div><strong>${d}</strong></div>
-                            <div class="timeline-events">${eventBadges || '<span style="font-size:0.55rem;">-</span>'}</div>
-                         </div>`;
-            }
-            html += `</div></div></div>`;
-        }
-        html += `</div></div></div>
-                 <div class="year-selector">
-                     <button id="timelinePrevYear">◀ ${timelineYear-1}</button>
-                     <span style="font-weight:bold; font-size:1.2rem;">${timelineYear}</span>
-                     <button id="timelineNextYear">${timelineYear+1} ▶</button>
-                 </div>`;
-        document.getElementById('dynamicViewContainer').innerHTML = html;
-        
-        document.querySelectorAll('.timeline-day-cell').forEach(cell => {
-            cell.addEventListener('click', () => {
-                const y = parseInt(cell.dataset.year), m = parseInt(cell.dataset.month), d = parseInt(cell.dataset.day);
-                const evs = getEventsForDate(y, m, d);
-                showDetailModal(`${y}-${m+1}-${d}`, evs);
-            });
-        });
-        document.getElementById('timelinePrevYear')?.addEventListener('click', () => { timelineYear--; renderTimelineView(); });
-        document.getElementById('timelineNextYear')?.addEventListener('click', () => { timelineYear++; renderTimelineView(); });
+        document.getElementById('dynamicViewContainer').innerHTML = `<div style="text-align:center; padding:40px;">⏱️ Linha do Tempo - Em desenvolvimento</div><div class="year-selector"><button id="timelinePrevYear">◀</button><span>${timelineYear}</span><button id="timelineNextYear">▶</button></div>`;
+        document.getElementById('timelinePrevYear').onclick = () => { timelineYear--; renderTimelineView(); };
+        document.getElementById('timelineNextYear').onclick = () => { timelineYear++; renderTimelineView(); };
     }
     
     function renderCurrentView() {
         if (currentView === 'month') renderMonthView();
         else if (currentView === 'quarter') renderQuarterView();
         else if (currentView === 'year') renderYearView();
-        else if (currentView === 'timeline') renderTimelineView();
+        else renderTimelineView();
     }
     
-    // ==================== CADASTRO MODAL ====================
     let currentEditingId = null;
-    
     function openEventModal(type, eventToEdit = null) {
         currentEditingId = eventToEdit?.id || null;
         const isEdit = !!eventToEdit;
-        const title = isEdit ? `Editar ${type === 'national' ? 'Feriado' : 'Evento'}` : `Adicionar ${type === 'national' ? 'Feriado' : 'Evento'}`;
-        
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `
-            <div class="modal-container" style="max-width:500px;">
-                <div style="padding:16px 20px; border-bottom:1px solid #e2edf2;">
-                    <h3 style="margin:0;">${title}</h3>
-                </div>
-                <div style="padding:20px;">
-                    <div class="form-group">
-                        <label>Nome</label>
-                        <input type="text" id="eventName" value="${eventToEdit?.name || ''}" placeholder="Ex: Natal, Férias João">
-                    </div>
-                    <div class="form-group">
-                        <label>Data de Início</label>
-                        <input type="date" id="startDate" value="${eventToEdit?.start || ''}">
-                    </div>
-                    <div class="form-group">
-                        <label>Data de Fim (opcional)</label>
-                        <input type="date" id="endDate" value="${eventToEdit?.end || ''}">
-                    </div>
-                    <div class="form-group">
-                        <label>Repetir</label>
-                        <select id="repeatType">
-                            <option value="single" ${eventToEdit?.repeatType === 'single' ? 'selected' : ''}>📅 Somente este ano</option>
-                            <option value="permanent" ${eventToEdit?.repeatType === 'permanent' ? 'selected' : ''}>♾️ Todos os anos</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Cor do Evento</label>
-                        <div class="color-palette" id="colorPaletteModal"></div>
-                    </div>
-                    <div class="modal-buttons">
-                        <button class="btn-cancel" id="cancelModalBtn">Cancelar</button>
-                        <button class="btn-save" id="saveModalBtn">${isEdit ? 'Salvar' : 'Adicionar'}</button>
-                    </div>
-                </div>
-            </div>
-        `;
+        modal.innerHTML = `<div class="modal-container" style="max-width:500px;"><div style="padding:16px 20px;"><h3>${isEdit ? 'Editar' : 'Adicionar'} ${type === 'national' ? 'Feriado' : 'Evento'}</h3></div><div style="padding:20px;"><div class="form-group"><label>Nome</label><input type="text" id="eventName" value="${eventToEdit?.name || ''}"></div><div class="form-group"><label>Data Início</label><input type="date" id="startDate" value="${eventToEdit?.start || ''}"></div><div class="form-group"><label>Data Fim</label><input type="date" id="endDate" value="${eventToEdit?.end || ''}"></div><div class="form-group"><label>Repetir</label><select id="repeatType"><option value="single">Somente este ano</option><option value="permanent" ${eventToEdit?.repeatType === 'permanent' ? 'selected' : ''}>Todos os anos</option></select></div><div class="form-group"><label>Cor</label><div class="color-palette" id="colorPaletteModal"></div></div><div class="modal-buttons"><button class="btn-cancel" id="cancelModalBtn">Cancelar</button><button class="btn-save" id="saveModalBtn">${isEdit ? 'Salvar' : 'Adicionar'}</button></div></div></div>`;
         document.body.appendChild(modal);
-        
-        const paletteContainer = modal.querySelector('#colorPaletteModal');
-        SOFT_COLORS.forEach(color => {
-            const swatch = document.createElement('div');
-            swatch.className = `palette-swatch ${eventToEdit?.color === color ? 'selected' : ''}`;
-            swatch.style.background = color;
-            swatch.dataset.color = color;
-            swatch.addEventListener('click', () => {
-                paletteContainer.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('selected'));
-                swatch.classList.add('selected');
-            });
-            paletteContainer.appendChild(swatch);
-        });
-        
-        const close = () => modal.remove();
-        modal.querySelector('#cancelModalBtn')?.addEventListener('click', close);
-        modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
-        
-        modal.querySelector('#saveModalBtn')?.addEventListener('click', async () => {
+        const palette = modal.querySelector('#colorPaletteModal');
+        SOFT_COLORS.forEach(c => { const swatch = document.createElement('div'); swatch.className = `palette-swatch ${eventToEdit?.color === c ? 'selected' : ''}`; swatch.style.background = c; swatch.onclick = () => { palette.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('selected')); swatch.classList.add('selected'); }; palette.appendChild(swatch); });
+        modal.querySelector('#cancelModalBtn').onclick = () => modal.remove();
+        modal.querySelector('#saveModalBtn').onclick = async () => {
             const name = modal.querySelector('#eventName').value.trim();
             const startDate = modal.querySelector('#startDate').value;
             let endDate = modal.querySelector('#endDate').value;
             const repeatType = modal.querySelector('#repeatType').value;
-            let color = paletteContainer.querySelector('.palette-swatch.selected')?.dataset.color || SOFT_COLORS[0];
-            
-            if (!name || !startDate) {
-                alert("Preencha nome e data de início");
-                return;
-            }
+            const color = palette.querySelector('.palette-swatch.selected')?.style.background || SOFT_COLORS[0];
+            if (!name || !startDate) { alert("Preencha nome e data"); return; }
             if (!endDate) endDate = startDate;
-            if (startDate > endDate) {
-                alert("Data final não pode ser anterior à inicial");
-                return;
-            }
-            
             if (isEdit) {
-                await updateEvent(currentEditingId, { name, start: startDate, end: endDate, repeatType, color, type: eventToEdit.type });
+                const index = events.findIndex(e => e.id == currentEditingId);
+                if (index !== -1) events[index] = { ...events[index], name, start: startDate, end: endDate, repeatType, color };
+                if (currentUser) await updateDoc(doc(db, "users", currentUser.uid), { events: events });
             } else {
                 await addEvent({ name, type, start: startDate, end: endDate, repeatType, color });
             }
-            close();
-        });
+            renderCurrentView();
+            renderCadastroList();
+            modal.remove();
+        };
     }
     
     function renderCadastroList() {
-        const eventosContainer = document.getElementById('eventosList');
-        const feriadosContainer = document.getElementById('feriadosList');
-        if (!eventosContainer) return;
-        
-        const eventos = events.filter(e => e.type !== 'national');
-        const feriados = events.filter(e => e.type === 'national');
-        
-        eventosContainer.innerHTML = eventos.length ? eventos.map(ev => `
-            <div class="event-list-item">
-                <div class="event-info">
-                    <div><strong>${ev.name}</strong></div>
-                    <div style="font-size:0.7rem; color:#666;">${ev.start} ${ev.start !== ev.end ? ` até ${ev.end}` : ''} | ${ev.repeatType === 'permanent' ? '♾️ Anual' : '📅 Este ano'}</div>
-                </div>
-                <div class="event-actions">
-                    <button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button>
-                    <button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button>
-                </div>
-            </div>
-        `).join('') : '<div style="text-align:center; padding:20px;">Nenhum evento cadastrado</div>';
-        
-        feriadosContainer.innerHTML = feriados.length ? feriados.map(ev => `
-            <div class="event-list-item">
-                <div class="event-info">
-                    <div><strong>${ev.name}</strong></div>
-                    <div style="font-size:0.7rem; color:#666;">${ev.start} | ${ev.repeatType === 'permanent' ? '♾️ Anual' : '📅 Este ano'}</div>
-                </div>
-                <div class="event-actions">
-                    <button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button>
-                    <button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button>
-                </div>
-            </div>
-        `).join('') : '<div style="text-align:center; padding:20px;">Nenhum feriado cadastrado</div>';
-        
-        document.querySelectorAll('.edit-event-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = parseInt(btn.dataset.id);
-                const ev = events.find(e => e.id === id);
-                if (ev) {
-                    document.querySelector('.modal-overlay')?.remove();
-                    openEventModal(ev.type, ev);
-                }
-            });
-        });
-        
-        document.querySelectorAll('.delete-event-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                if (confirm("Tem certeza que deseja excluir este evento?")) {
-                    await deleteEvent(parseInt(btn.dataset.id));
-                    renderCadastroList();
-                }
-            });
-        });
+        const eventosDiv = document.getElementById('eventosList');
+        const feriadosDiv = document.getElementById('feriadosList');
+        if (!eventosDiv) return;
+        eventosDiv.innerHTML = events.filter(e => e.type !== 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}${ev.start !== ev.end ? ` até ${ev.end}` : ''}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">Editar</button><button class="delete-event-btn" data-id="${ev.id}">Excluir</button></div></div>`).join('') || '<div style="text-align:center">Nenhum evento</div>';
+        feriadosDiv.innerHTML = events.filter(e => e.type === 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">Editar</button><button class="delete-event-btn" data-id="${ev.id}">Excluir</button></div></div>`).join('') || '<div style="text-align:center">Nenhum feriado</div>';
+        document.querySelectorAll('.edit-event-btn').forEach(btn => btn.onclick = () => { const ev = events.find(e => e.id == btn.dataset.id); if (ev) openEventModal(ev.type, ev); });
+        document.querySelectorAll('.delete-event-btn').forEach(btn => btn.onclick = async () => { if (confirm("Excluir?")) await deleteEvent(parseInt(btn.dataset.id)); });
     }
     
     function openCadastroModal() {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `
-            <div class="modal-container">
-                <div class="modal-tabs">
-                    <button class="tab-btn active" data-tab="eventos">📋 Eventos</button>
-                    <button class="tab-btn" data-tab="feriados">🏛️ Feriados</button>
-                </div>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab-eventos">
-                        <div id="eventosList"></div>
-                    </div>
-                    <div class="tab-pane" id="tab-feriados">
-                        <div id="feriadosList"></div>
-                    </div>
-                </div>
-                <div style="padding:16px; border-top:1px solid #e2edf2;">
-                    <button class="btn-cancel" id="closeCadastroBtn" style="width:100%;">Fechar</button>
-                </div>
-            </div>
-        `;
+        modal.innerHTML = `<div class="modal-container"><div class="modal-tabs"><button class="tab-btn active" data-tab="eventos">📋 Eventos</button><button class="tab-btn" data-tab="feriados">🏛️ Feriados</button></div><div class="tab-content"><div class="tab-pane active" id="tab-eventos"><div id="eventosList"></div></div><div class="tab-pane" id="tab-feriados"><div id="feriadosList"></div></div></div><div style="padding:16px"><button class="btn-cancel" id="closeCadastroBtn" style="width:100%">Fechar</button></div></div>`;
         document.body.appendChild(modal);
-        
         renderCadastroList();
-        
-        const tabs = modal.querySelectorAll('.tab-btn');
-        const panes = modal.querySelectorAll('.tab-pane');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                panes.forEach(p => p.classList.remove('active'));
-                modal.querySelector(`#tab-${tab.dataset.tab}`).classList.add('active');
-            });
-        });
-        
-        modal.querySelector('#closeCadastroBtn')?.addEventListener('click', () => modal.remove());
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+        const tabs = modal.querySelectorAll('.tab-btn'), panes = modal.querySelectorAll('.tab-pane');
+        tabs.forEach(tab => tab.onclick = () => { tabs.forEach(t => t.classList.remove('active')); tab.classList.add('active'); panes.forEach(p => p.classList.remove('active')); modal.querySelector(`#tab-${tab.dataset.tab}`).classList.add('active'); });
+        modal.querySelector('#closeCadastroBtn').onclick = () => modal.remove();
     }
     
-    function generatePDF() {
-        alert("📄 Função de PDF será implementada em breve! Por enquanto, use Ctrl+P para imprimir.");
-    }
+    function generatePDF() { alert("Função PDF em breve. Use Ctrl+P para imprimir."); }
     
-    // ==================== APP PRINCIPAL ====================
     function renderMainApp() {
-        const container = document.getElementById('app');
-        container.innerHTML = `
-            <div class="app-container">
-                <div class="page-main-title">
-                    <h1>📅 AGENDA DE FÉRIAS DA APS</h1>
-                    <div class="user-info">
-                        <div class="user-avatar">${currentUser?.displayName?.charAt(0) || 'U'}</div>
-                        <span>${currentUser?.displayName || currentUser?.email}</span>
-                        <button class="logout-btn" id="logoutBtn">Sair</button>
-                    </div>
-                </div>
-                <div class="main-calendar">
-                    <div class="toolbar">
-                        <div class="view-buttons">
-                            <button class="view-btn ${currentView === 'month' ? 'active' : ''}" data-view="month">📆 Mês</button>
-                            <button class="view-btn ${currentView === 'quarter' ? 'active' : ''}" data-view="quarter">📚 Trimestre</button>
-                            <button class="view-btn ${currentView === 'year' ? 'active' : ''}" data-view="year">🗓️ Ano</button>
-                            <button class="view-btn ${currentView === 'timeline' ? 'active' : ''}" data-view="timeline">⏱️ Linha do Tempo</button>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="action-btn" id="btnFeriado">➕ Feriado</button>
-                            <button class="action-btn" id="btnEvento">📌 + Evento</button>
-                            <button class="action-btn" id="btnCadastro">📋 Cadastros</button>
-                            <button class="action-btn toggle-btn ${showHolidays ? 'active-toggle' : ''}" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button>
-                            <button class="action-btn toggle-btn ${showPersonalEvents ? 'active-toggle' : ''}" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Eventos</button>
-                            <button class="action-btn" id="btnPDF">📄 Gerar PDF</button>
-                        </div>
-                    </div>
-                    <div id="dynamicViewContainer"></div>
-                    <footer>Clique em qualquer dia para ver detalhes | Dados salvos na nuvem do Firebase</footer>
-                </div>
-            </div>
+        document.getElementById('app').innerHTML = `
+            <div class="app-container"><div class="page-main-title"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><div class="user-info"><div class="user-avatar">${currentUser?.displayName?.charAt(0) || 'U'}</div><span>${currentUser?.displayName || currentUser?.email}</span><button class="logout-btn" id="logoutBtn">Sair</button></div></div><div class="main-calendar"><div class="toolbar"><div class="view-buttons"><button class="view-btn ${currentView === 'month' ? 'active' : ''}" data-view="month">📆 Mês</button><button class="view-btn ${currentView === 'quarter' ? 'active' : ''}" data-view="quarter">📚 Trimestre</button><button class="view-btn ${currentView === 'year' ? 'active' : ''}" data-view="year">🗓️ Ano</button><button class="view-btn ${currentView === 'timeline' ? 'active' : ''}" data-view="timeline">⏱️ Linha do Tempo</button></div><div class="action-buttons"><button class="action-btn" id="btnFeriado">➕ Feriado</button><button class="action-btn" id="btnEvento">📌 + Evento</button><button class="action-btn" id="btnCadastro">📋 Cadastros</button><button class="action-btn toggle-btn ${showHolidays ? 'active-toggle' : ''}" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button><button class="action-btn toggle-btn ${showPersonalEvents ? 'active-toggle' : ''}" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Eventos</button><button class="action-btn" id="btnPDF">📄 Gerar PDF</button></div></div><div id="dynamicViewContainer"></div><footer>Clique em qualquer dia para ver detalhes | Dados salvos na nuvem</footer></div></div>
         `;
-        
-        document.getElementById('logoutBtn')?.addEventListener('click', async () => {
-            await signOut(auth);
-            currentUser = null;
-            renderLoginScreen();
-        });
-        
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                currentView = btn.dataset.view;
-                if (currentView === 'timeline') timelineYear = currentYear;
-                renderMainApp();
-            });
-        });
-        
-        document.getElementById('btnFeriado')?.addEventListener('click', () => openEventModal('national'));
-        document.getElementById('btnEvento')?.addEventListener('click', () => openEventModal('personal'));
-        document.getElementById('btnCadastro')?.addEventListener('click', openCadastroModal);
-        document.getElementById('btnPDF')?.addEventListener('click', generatePDF);
-        
-        document.getElementById('btnToggleFeriados')?.addEventListener('click', () => {
-            showHolidays = !showHolidays;
-            renderMainApp();
-        });
-        
-        document.getElementById('btnToggleEventos')?.addEventListener('click', () => {
-            showPersonalEvents = !showPersonalEvents;
-            renderMainApp();
-        });
-        
+        document.querySelectorAll('.view-btn').forEach(btn => btn.onclick = () => { currentView = btn.dataset.view; renderMainApp(); });
+        document.getElementById('logoutBtn').onclick = async () => { await signOut(auth); renderLoginScreen(); };
+        document.getElementById('btnFeriado').onclick = () => openEventModal('national');
+        document.getElementById('btnEvento').onclick = () => openEventModal('personal');
+        document.getElementById('btnCadastro').onclick = openCadastroModal;
+        document.getElementById('btnPDF').onclick = generatePDF;
+        document.getElementById('btnToggleFeriados').onclick = () => { showHolidays = !showHolidays; renderMainApp(); };
+        document.getElementById('btnToggleEventos').onclick = () => { showPersonalEvents = !showPersonalEvents; renderMainApp(); };
         renderCurrentView();
     }
     
     function renderLoginScreen() {
-        const container = document.getElementById('app');
-        container.innerHTML = `
-            <div class="login-overlay">
-                <div class="login-card">
-                    <h1>📅 AGENDA DE FÉRIAS DA APS</h1>
-                    <p style="color:#666; margin:20px 0;">Faça login com sua conta Google para acessar sua agenda personalizada</p>
-                    <button class="google-btn" id="googleLoginBtn">
-                        🔐 Entrar com Google
-                    </button>
-                    <p style="font-size:0.7rem; margin-top:20px;">Seus dados serão salvos na nuvem e sincronizados entre dispositivos</p>
-                </div>
-            </div>
-        `;
-        document.getElementById('googleLoginBtn')?.addEventListener('click', async () => {
+        document.getElementById('app').innerHTML = `<div class="login-overlay"><div class="login-card"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><p>Faça login com sua conta Google</p><button class="google-btn" id="googleLoginBtn">🔐 Entrar com Google</button><p style="font-size:0.7rem; margin-top:20px;">Seus dados serão salvos na nuvem</p></div></div>`;
+        document.getElementById('googleLoginBtn').onclick = async () => {
             try {
                 const result = await signInWithPopup(auth, provider);
                 currentUser = result.user;
                 await loadUserEvents(currentUser.uid);
                 renderMainApp();
             } catch (error) {
-                console.error("Erro no login:", error);
-                alert("Erro ao fazer login. Verifique se você ativou o login com Google no Firebase Console.");
+                console.error(error);
+                alert("Erro ao fazer login. Tente novamente.");
             }
-        });
+        };
     }
     
-    // ==================== INICIAR ====================
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUser = user;
