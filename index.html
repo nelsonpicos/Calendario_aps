@@ -12,7 +12,7 @@
         .login-card h1 { color: #1b5e7a; margin-bottom: 20px; }
         .google-btn { background: #4285f4; color: white; border: none; padding: 14px 28px; border-radius: 40px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-top: 20px; }
         .google-btn:hover { background: #3367d6; }
-        .loading { text-align: center; padding: 40px; color: #666; }
+        .loading { text-align: center; padding: 40px; color: #1b5e7a; font-weight: bold; font-size: 1.2rem; }
         .app-container { max-width: 1400px; width: 100%; background: white; border-radius: 32px; box-shadow: 0 20px 35px rgba(0,0,0,0.1); overflow: hidden; }
         .page-main-title { background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); color: white; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         .user-info { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.2); padding: 8px 18px; border-radius: 50px; }
@@ -80,7 +80,7 @@
     </style>
 </head>
 <body>
-<div id="app"><div class="loading">Carregando...</div></div>
+<div id="app"><div class="loading">Carregando a Agenda...</div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
@@ -134,11 +134,12 @@
                 events = [...DEFAULT_HOLIDAYS];
                 await setDoc(userDocRef, { events: events });
             }
-            renderMainApp();
         } catch (error) {
-            console.error("Erro ao carregar dados do Firestore:", error);
-            renderMainApp(); // Carrega o app mesmo se falhar para não travar a tela
+            console.error("Erro ao acessar o Firestore:", error);
+            // Fallback para não travar a tela caso a nuvem falhe temporariamente
+            if(events.length === 0) events = [...DEFAULT_HOLIDAYS]; 
         }
+        renderMainApp();
     }
     
     function getEventsForDate(year, month, day) {
@@ -163,7 +164,9 @@
     async function addEvent(event) {
         event.id = Date.now();
         events.push(event);
-        if (currentUser) await updateDoc(doc(db, "users", currentUser.uid), { events: arrayUnion(event) });
+        try {
+            if (currentUser) await updateDoc(doc(db, "users", currentUser.uid), { events: arrayUnion(event) });
+        } catch(e) { console.error(e); }
         renderCurrentView();
         renderCadastroList();
     }
@@ -171,7 +174,9 @@
     async function deleteEvent(id) {
         const eventToRemove = events.find(e => e.id == id);
         events = events.filter(e => e.id != id);
-        if (currentUser && eventToRemove) await updateDoc(doc(db, "users", currentUser.uid), { events: arrayRemove(eventToRemove) });
+        try {
+            if (currentUser && eventToRemove) await updateDoc(doc(db, "users", currentUser.uid), { events: arrayRemove(eventToRemove) });
+        } catch(e) { console.error(e); }
         renderCurrentView();
         renderCadastroList();
     }
@@ -357,7 +362,9 @@
                 const index = events.findIndex(e => e.id == currentEditingId);
                 if (index !== -1) {
                     events[index] = { ...events[index], name, start: startDate, end: endDate, repeatType, color };
-                    if (currentUser) await setDoc(doc(db, "users", currentUser.uid), { events: events });
+                    try {
+                        if (currentUser) await setDoc(doc(db, "users", currentUser.uid), { events: events });
+                    } catch(e) { console.error(e); }
                 }
             } else {
                 await addEvent({ name, type, start: startDate, end: endDate, repeatType, color });
@@ -396,7 +403,7 @@
             <div class="app-container"><div class="page-main-title"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><div class="user-info"><div class="user-avatar">${currentUser?.displayName?.charAt(0) || 'U'}</div><span>${currentUser?.displayName || currentUser?.email}</span><button class="logout-btn" id="logoutBtn">Sair</button></div></div><div class="main-calendar"><div class="toolbar"><div class="view-buttons"><button class="view-btn ${currentView === 'month' ? 'active' : ''}" data-view="month">📆 Mês</button><button class="view-btn ${currentView === 'quarter' ? 'active' : ''}" data-view="quarter">📚 Trimestre</button><button class="view-btn ${currentView === 'year' ? 'active' : ''}" data-view="year">🗓️ Ano</button><button class="view-btn ${currentView === 'timeline' ? 'active' : ''}" data-view="timeline">⏱️ Linha do Tempo</button></div><div class="action-buttons"><button class="action-btn" id="btnFeriado">➕ Feriado</button><button class="action-btn" id="btnEvento">📌 + Evento</button><button class="action-btn" id="btnCadastro">📋 Cadastros</button><button class="action-btn toggle-btn ${showHolidays ? 'active-toggle' : ''}" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button><button class="action-btn toggle-btn ${showPersonalEvents ? 'active-toggle' : ''}" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Eventos</button><button class="action-btn" id="btnPDF">📄 Gerar PDF</button></div></div><div id="dynamicViewContainer"></div><footer>Clique em qualquer dia para ver detalhes | Dados salvos com segurança na nuvem</footer></div></div>
         `;
         document.querySelectorAll('.view-btn').forEach(btn => btn.onclick = () => { currentView = btn.dataset.view; if (currentView === 'timeline') timelineYear = currentYear; renderMainApp(); });
-        document.getElementById('logoutBtn').onclick = async () => { await signOut(auth); currentUser = null; events = []; renderLoginScreen(); };
+        document.getElementById('logoutBtn').onclick = async () => { await signOut(auth); currentUser = null; events = [...DEFAULT_HOLIDAYS]; renderLoginScreen(); };
         document.getElementById('btnFeriado').onclick = () => openEventModal('national');
         document.getElementById('btnEvento').onclick = () => openEventModal('personal');
         document.getElementById('btnCadastro').onclick = openCadastroModal;
@@ -418,26 +425,30 @@
         };
     }
     
-    // O ÚNICO GESTOR DE ESTADO DA APLICAÇÃO:
+    // GESTOR ÚNICO E SEGURO DO FLUXO DE AUTENTICAÇÃO:
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUser = user;
             await loadUserEvents(user.uid);
         } else {
-            // Se não está logado na sessão normal, checa se acabou de voltar de um redirecionamento válido antes de mandar para a tela de login
-            getRedirectResult(auth)
-                .then(async (result) => {
-                    if (result?.user) {
-                        currentUser = result.user;
-                        await loadUserEvents(currentUser.uid);
-                    } else {
+            // Apenas verifica o resultado do redirecionamento se houver um parâmetro na URL indicando retorno do login
+            if (window.location.search.includes('oauth') || window.location.hash.includes('access_token') || document.referrer.includes('accounts.google')) {
+                getRedirectResult(auth)
+                    .then(async (result) => {
+                        if (result?.user) {
+                            currentUser = result.user;
+                            await loadUserEvents(currentUser.uid);
+                        } else {
+                            renderLoginScreen();
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Erro no retorno do redirecionamento:", error);
                         renderLoginScreen();
-                    }
-                })
-                .catch((error) => {
-                    console.error("Erro no retorno do redirecionamento:", error);
-                    renderLoginScreen();
-                });
+                    });
+            } else {
+                renderLoginScreen();
+            }
         }
     });
 </script>
