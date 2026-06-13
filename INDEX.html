@@ -30,13 +30,13 @@
         .loading { text-align: center; padding: 40px; color: #1b5e7a; font-weight: bold; font-size: 1.2rem; }
         .app-container { max-width: 1400px; width: 100%; background: white; border-radius: 32px; box-shadow: 0 20px 35px rgba(0,0,0,0.1); overflow: hidden; }
         
-        /* TÍTULO E DIREITOS AUTORAIS NO MESMO PLANO (ALINHADOS NA HORIZONTAL) */
-        .page-main-title { background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); color: white; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        /* TÍTULO E DIREITOS AUTORAIS NO MESMO PLANO FIXOS NO TOPO */
+        .page-main-title { background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); color: white; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; position: sticky; top: 0; z-index: 1000; }
         .title-group { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
         .title-group h1 { margin: 0; font-size: 1.8rem; font-weight: bold; }
         .title-copyright { font-size: 0.85rem; color: rgba(255, 255, 255, 0.85); font-weight: normal; white-space: nowrap; }
         
-        /* BARRA DO USUÁRIO CORRIGIDA (EXIBE E-MAIL SEM SOBREPOSIÇÃO) */
+        /* BARRA DO USUÁRIO */
         .user-info { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 50px; flex-wrap: nowrap; }
         .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1b5e7a; text-transform: uppercase; flex-shrink: 0; }
         .user-email-display { color: white; font-size: 0.95rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
@@ -72,15 +72,18 @@
         .small-calendar-day.other-month { background: #fafcff; color: #94a3b8; }
         .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; }
         .small-event-item { background: #e8a0a0; border-radius: 4px; padding: 1px 3px; margin: 1px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .timeline-wrapper { overflow-x: auto; max-height: 70vh; border-radius: 20px; border: 1px solid #dee2e6; background: white; }
-        .timeline-months { display: flex; }
-        .timeline-month-col { border-right: 3px solid #6c757d; min-width: 500px; }
-        .timeline-month-header { background: #6c757d; color: white; padding: 12px 16px; font-weight: bold; text-align: center; position: sticky; top: 0; z-index: 20; }
-        .timeline-day-row { display: flex; }
-        .timeline-day-cell { width: 70px; min-width: 70px; padding: 10px 4px; text-align: center; border-right: 1px solid #e9ecef; cursor: pointer; }
-        .timeline-day-cell.weekend { background: #f8f0e6; }
-        .timeline-day-cell.today { background: #b8e1fc; font-weight: bold; }
-        .timeline-event-badge { background: #e8a0a0; border-radius: 10px; padding: 2px 5px; font-size: 0.55rem; white-space: nowrap; display: inline-block; margin: 1px; }
+        
+        /* TIMELINE GANTT */
+        .timeline-wrapper { overflow-x: auto; max-height: 70vh; border-radius: 20px; border: 1px solid #dee2e6; background: white; padding: 12px; }
+        .timeline-month-col { margin-bottom: 20px; border: 1px solid #cbd5e1; border-radius: 16px; overflow: hidden; background: #f8fafc; }
+        .timeline-month-header { background: #1b5e7a; color: white; padding: 10px 16px; font-weight: bold; font-size: 1.1rem; }
+        .timeline-bars-area { padding: 15px; position: relative; min-height: 60px; }
+        .timeline-days-axis { display: flex; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px; padding-bottom: 4px; }
+        .timeline-axis-day { flex: 1; text-align: center; font-size: 0.65rem; color: #64748b; min-width: 24px; }
+        .timeline-parallel-row { position: relative; height: 32px; margin-bottom: 6px; background: rgba(255,255,255,0.6); border-radius: 20px; border: 1px solid #e2e8f0; }
+        .timeline-event-bar { position: absolute; top: 4px; height: 22px; border-radius: 20px; display: flex; align-items: center; padding: 0 10px; color: white; font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .timeline-event-bar:hover { filter: brightness(0.95); }
+
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
         .modal-container { background: white; border-radius: 32px; width: 90%; max-width: 600px; max-height: 85vh; overflow: hidden; }
         .modal-tabs { display: flex; border-bottom: 2px solid #e2edf2; }
@@ -181,6 +184,28 @@
                 return ev.start <= targetStr && ev.end >= targetStr;
             }
         });
+    }
+
+    function isEventInMonthYear(ev, month, year) {
+        if (ev.type === 'national' && !showHolidays) return false;
+        if (ev.type !== 'national' && !showPersonalEvents) return false;
+
+        const s = new Date(ev.start + 'T00:00:00');
+        const e = new Date(ev.end + 'T00:00:00');
+        
+        if (ev.repeatType === 'permanent') {
+            return true;
+        }
+        
+        const startMonth = s.getFullYear() * 12 + s.getMonth();
+        const endMonth = e.getFullYear() * 12 + e.getMonth();
+        const targetMonth = year * 12 + month;
+
+        return targetMonth >= startMonth && targetMonth <= endMonth;
+    }
+
+    function getEventsForMonthParallel(month, year) {
+        return events.filter(ev => isEventInMonthYear(ev, month, year));
     }
     
     async function addEvent(event) {
@@ -319,45 +344,84 @@
     }
     
     function renderTimelineView() {
-        let monthsWithEvents = new Set();
-        events.forEach(ev => {
-            if (ev.repeatType === 'permanent' || parseInt(ev.start.split('-')[0]) === timelineYear) {
-                const s = new Date(ev.start), e = new Date(ev.end);
-                let sM = s.getMonth(), eM = e.getMonth();
-                if (ev.repeatType === 'permanent') { sM = 0; eM = 11; }
-                for (let m = sM; m <= eM; m++) monthsWithEvents.add(m);
+        let activeMonths = [];
+        for (let m = 0; m < 12; m++) {
+            const evsInMonth = getEventsForMonthParallel(m, timelineYear);
+            if (evsInMonth.length > 0) {
+                activeMonths.push({ index: m, events: evsInMonth });
             }
-        });
-        const sortedMonths = Array.from(monthsWithEvents).sort((a,b) => a - b);
-        if (sortedMonths.length === 0) {
-            document.getElementById('dynamicViewContainer').innerHTML = `<div style="padding:40px; text-align:center;">✨ Nenhum evento para ${timelineYear}. Adicione eventos para visualizar na linha do tempo.</div><div class="year-selector"><button id="timelinePrevYear">◀ ${timelineYear-1}</button><span>${timelineYear}</span><button id="timelineNextYear">${timelineYear+1} ▶</button></div>`;
+        }
+
+        if (activeMonths.length === 0) {
+            document.getElementById('dynamicViewContainer').innerHTML = `<div style="padding:40px; text-align:center;">✨ Nenhuma marcação encontrada para ${timelineYear}. Adicione eventos ou feriados para visualizar na linha do tempo.</div><div class="year-selector"><button id="timelinePrevYear">◀ ${timelineYear-1}</button><span>${timelineYear}</span><button id="timelineNextYear">${timelineYear+1} ▶</button></div>`;
             document.getElementById('timelinePrevYear').onclick = () => { timelineYear--; renderTimelineView(); };
             document.getElementById('timelineNextYear').onclick = () => { timelineYear++; renderTimelineView(); };
             return;
         }
-        const today = new Date();
-        let html = `<div class="timeline-wrapper"><div class="timeline-container"><div class="timeline-months">`;
-        for (const monthIdx of sortedMonths) {
-            const daysInMonth = new Date(timelineYear, monthIdx + 1, 0).getDate();
-            const monthName = new Date(timelineYear, monthIdx, 1).toLocaleString('pt-BR', { month: 'long' });
-            html += `<div class="timeline-month-col" style="min-width:${daysInMonth * 75}px;"><div class="timeline-month-header">${monthName.toUpperCase()} / ${timelineYear}</div><div class="timeline-days"><div class="timeline-day-row" style="display:flex;">`;
+
+        const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+        let html = `<div class="timeline-wrapper">`;
+
+        activeMonths.forEach(monthData => {
+            const daysInMonth = new Date(timelineYear, monthData.index + 1, 0).getDate();
+            
+            // Gerar eixo de dias
+            let daysAxisHtml = '';
             for (let d = 1; d <= daysInMonth; d++) {
-                const weekday = new Date(timelineYear, monthIdx, d).getDay();
-                const isWeekend = (weekday === 0 || weekday === 6);
-                const isToday = (timelineYear === today.getFullYear() && monthIdx === today.getMonth() && d === today.getDate());
-                const eventsDay = getEventsForDate(timelineYear, monthIdx, d);
-                let eventBadges = '';
-                for (const ev of eventsDay) eventBadges += `<div class="timeline-event-badge" style="background:${ev.color};">${ev.name}</div>`;
-                html += `<div class="timeline-day-cell ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''}" data-year="${timelineYear}" data-month="${monthIdx}" data-day="${d}"><div><strong>${d}</strong></div><div class="timeline-events">${eventBadges || '-'}</div></div>`;
+                daysAxisHtml += `<div class="timeline-axis-day">${d}</div>`;
             }
-            html += `</div></div></div>`;
-        }
-        html += `</div></div></div><div class="year-selector"><button id="timelinePrevYear">◀ ${timelineYear-1}</button><span>${timelineYear}</span><button id="timelineNextYear">${timelineYear+1} ▶</button></div>`;
+
+            // Gerar linhas paralelas de eventos
+            let rowsHtml = '';
+            monthData.events.forEach(ev => {
+                const sDate = new Date(ev.start + 'T00:00:00');
+                const eDate = new Date(ev.end + 'T00:00:00');
+
+                // Limpar datas relativas ao mês atual
+                let startDay = 1;
+                let endDay = daysInMonth;
+
+                if (sDate.getFullYear() === timelineYear && sDate.getMonth() === monthData.index) {
+                    startDay = sDate.getDate();
+                }
+                if (eDate.getFullYear() === timelineYear && eDate.getMonth() === monthData.index) {
+                    endDay = eDate.getDate();
+                }
+
+                // Em repetições anuais permanentes em outros meses, ajustar limites
+                if (ev.repeatType === 'permanent') {
+                    startDay = 1;
+                    endDay = daysInMonth;
+                }
+
+                const leftPct = ((startDay - 1) / daysInMonth) * 100;
+                const widthPct = ((endDay - startDay + 1) / daysInMonth) * 100;
+
+                rowsHtml += `
+                    <div class="timeline-parallel-row">
+                        <div class="timeline-event-bar" 
+                             style="left: ${leftPct}%; width: ${widthPct}%; background-color: ${ev.color};"
+                             title="${ev.name} (${ev.start} até ${ev.end})">
+                            ${ev.name}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="timeline-month-col">
+                    <div class="timeline-month-header">${monthNames[monthData.index].toUpperCase()} / ${timelineYear}</div>
+                    <div class="timeline-bars-area">
+                        <div class="timeline-days-axis" style="width: 100%;">${daysAxisHtml}</div>
+                        ${rowsHtml}
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `</div><div class="year-selector"><button id="timelinePrevYear">◀ ${timelineYear-1}</button><span>${timelineYear}</span><button id="timelineNextYear">${timelineYear+1} ▶</button></div>`;
         document.getElementById('dynamicViewContainer').innerHTML = html;
-        document.querySelectorAll('.timeline-day-cell').forEach(cell => cell.addEventListener('click', () => {
-            const y = parseInt(cell.dataset.year), m = parseInt(cell.dataset.month), d = parseInt(cell.dataset.day);
-            showDetailModal(`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`, getEventsForDate(y, m, d));
-        }));
+
         document.getElementById('timelinePrevYear').onclick = () => { timelineYear--; renderTimelineView(); };
         document.getElementById('timelineNextYear').onclick = () => { timelineYear++; renderTimelineView(); };
     }
@@ -396,4 +460,188 @@
                         if (currentUser) await db.collection("users").doc(currentUser.uid).set({ events: events });
                     } catch(e) { console.error(e); }
                 }
-            } else
+            } else {
+                await addEvent({ name, type, start: startDate, end: endDate, repeatType, color });
+            }
+            renderCurrentView();
+            renderCadastroList();
+            modal.remove();
+        };
+    }
+    
+    function renderCadastroList() {
+        const eventosDiv = document.getElementById('eventosList');
+        const feriadosDiv = document.getElementById('feriadosList');
+        if (!eventosDiv) return;
+        eventosDiv.innerHTML = events.filter(e => e.type !== 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}${ev.start !== ev.end ? ` até ${ev.end}` : ''}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">Editar</button><button class="delete-event-btn" data-id="${ev.id}">Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:10px;">Nenhum evento pessoal cadastrado</div>';
+        feriadosDiv.innerHTML = events.filter(e => e.type === 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">Editar</button><button class="delete-event-btn" data-id="${ev.id}">Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:10px;">Nenhum feriado cadastrado</div>';
+        document.querySelectorAll('.edit-event-btn').forEach(btn => btn.onclick = () => { const ev = events.find(e => e.id == btn.dataset.id); if (ev) openEventModal(ev.type, ev); });
+        document.querySelectorAll('.delete-event-btn').forEach(btn => btn.onclick = async () => { if (confirm("Tem certeza que deseja excluir este item?")) await deleteEvent(parseInt(btn.dataset.id)); });
+    }
+    
+    function openCadastroModal() {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `<div class="modal-container"><div class="modal-tabs"><button class="tab-btn active" data-tab="eventos">📋 Eventos</button><button class="tab-btn" data-tab="feriados">🏛️ Feriados</button></div><div class="tab-content"><div class="tab-pane active" id="tab-eventos"><div id="eventosList"></div></div><div class="tab-pane" id="tab-feriados"><div id="feriadosList"></div></div></div><div style="padding:16px"><button class="btn-cancel" id="closeCadastroBtn" style="width:100%">Fechar</button></div></div>`;
+        document.body.appendChild(modal);
+        renderCadastroList();
+        const tabs = modal.querySelectorAll('.tab-btn'), panes = modal.querySelectorAll('.tab-pane');
+        tabs.forEach(tab => tab.onclick = () => { tabs.forEach(t => t.classList.remove('active')); tab.classList.add('active'); panes.forEach(p => p.classList.remove('active')); modal.querySelector(`#tab-${tab.dataset.tab}`).classList.add('active'); });
+        modal.querySelector('#closeCadastroBtn').onclick = () => modal.remove();
+    }
+    
+    function generatePDF() { alert("📄 Utilize Ctrl+P no teclado para salvar ou imprimir com design limpo."); }
+    
+    function renderMainApp() {
+        const userEmail = currentUser?.email || "usuario@aps.gov.br";
+        const initialLetter = userEmail.charAt(0).toUpperCase();
+
+        document.getElementById('app').innerHTML = `
+            <div class="app-container">
+                <div class="page-main-title">
+                    <div class="title-group">
+                        <h1>📅 AGENDA DE FÉRIAS DA APS</h1>
+                        <span class="title-copyright">(c) nelson.picos@gmail.com</span>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-avatar">${initialLetter}</div>
+                        <span class="user-email-display" title="${userEmail}">${userEmail}</span>
+                        <button class="logout-btn" id="logoutBtn">Sair</button>
+                    </div>
+                </div>
+                <div class="main-calendar">
+                    <div class="toolbar">
+                        <div class="view-buttons">
+                            <button class="view-btn ${currentView === 'month' ? 'active' : ''}" data-view="month">📆 Mês</button>
+                            <button class="view-btn ${currentView === 'quarter' ? 'active' : ''}" data-view="quarter">📚 Trimestre</button>
+                            <button class="view-btn ${currentView === 'year' ? 'active' : ''}" data-view="year">🗓️ Ano</button>
+                            <button class="view-btn ${currentView === 'timeline' ? 'active' : ''}" data-view="timeline">⏱️ Linha do Tempo</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn" id="btnFeriado">➕ Feriado</button>
+                            <button class="action-btn" id="btnEvento">📌 + Evento</button>
+                            <button class="action-btn" id="btnCadastro">📋 Cadastros</button>
+                            <button class="action-btn toggle-btn ${showHolidays ? 'active-toggle' : ''}" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button>
+                            <button class="action-btn toggle-btn ${showPersonalEvents ? 'active-toggle' : ''}" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Eventos</button>
+                            <button class="action-btn" id="btnPDF">📄 Gerar PDF</button>
+                        </div>
+                    </div>
+                    <div id="dynamicViewContainer"></div>
+                    <footer>Dados sincronizados na nuvem</footer>
+                </div>
+            </div>
+        `;
+        document.querySelectorAll('.view-btn').forEach(btn => btn.onclick = () => { currentView = btn.dataset.view; if (currentView === 'timeline') timelineYear = currentYear; renderMainApp(); });
+        document.getElementById('logoutBtn').onclick = async () => { 
+            lockAuthStream = true;
+            currentUser = null; 
+            events = [...DEFAULT_HOLIDAYS]; 
+            document.getElementById('app').innerHTML = '<div class="loading">A encerrar sessão...</div>';
+            try { await auth.signOut(); } catch(e){}
+            lockAuthStream = false;
+            renderLoginScreen();
+        };
+        document.getElementById('btnFeriado').onclick = () => openEventModal('national');
+        document.getElementById('btnEvento').onclick = () => openEventModal('personal');
+        document.getElementById('btnCadastro').onclick = openCadastroModal;
+        document.getElementById('btnPDF').onclick = generatePDF;
+        document.getElementById('btnToggleFeriados').onclick = () => { showHolidays = !showHolidays; renderCurrentView(); document.getElementById('btnToggleFeriados').classList.toggle('active-toggle', showHolidays); document.getElementById('btnToggleFeriados').innerText = `🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados`; };
+        document.getElementById('btnToggleEventos').onclick = () => { showPersonalEvents = !showPersonalEvents; renderCurrentView(); document.getElementById('btnToggleEventos').classList.toggle('active-toggle', showPersonalEvents); document.getElementById('btnToggleEventos').innerText = `👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Eventos`; };
+        renderCurrentView();
+    }
+    
+    function renderLoginScreen() {
+        document.getElementById('app').innerHTML = `
+            <div class="login-overlay">
+                <div class="login-card">
+                    <h1>📅 AGENDA DE FÉRIAS DA APS</h1>
+                    <p>Digite seu e-mail e senha para acessar ou criar sua conta</p>
+                    
+                    <div class="form-group-login">
+                        <label>E-mail</label>
+                        <input type="email" id="inputEmail" placeholder="exemplo@email.com">
+                    </div>
+                    
+                    <div class="form-group-login" style="margin-top:15px;">
+                        <label>Senha</label>
+                        <input type="password" id="inputPassword" placeholder="Mínimo de 6 dígitos">
+                    </div>
+
+                    <div class="auth-btn-group">
+                        <button class="auth-btn btn-login" id="loginBtn">Entrar</button>
+                        <button class="auth-btn btn-register" id="registerBtn">Criar Conta</button>
+                    </div>
+
+                    <div class="auth-error" id="authErrorMsg"></div>
+                </div>
+            </div>
+        `;
+        
+        const errorMsg = document.getElementById('authErrorMsg');
+
+        document.getElementById('loginBtn').onclick = async () => {
+            const email = document.getElementById('inputEmail').value.trim();
+            const password = document.getElementById('inputPassword').value.trim();
+            
+            if(!email || !password) {
+                errorMsg.innerText = "Preencha o e-mail e a senha.";
+                return;
+            }
+
+            errorMsg.innerText = "A autenticar...";
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch(err) {
+                errorMsg.innerText = parseFirebaseError(err.code);
+            }
+        };
+
+        document.getElementById('registerBtn').onclick = async () => {
+            const email = document.getElementById('inputEmail').value.trim();
+            const password = document.getElementById('inputPassword').value.trim();
+            
+            if(!email || !password) {
+                errorMsg.innerText = "Insira um e-mail e crie uma senha válida.";
+                return;
+            }
+            if(password.length < 6) {
+                errorMsg.innerText = "A senha deve ter pelo menos 6 caracteres.";
+                return;
+            }
+
+            errorMsg.innerText = "A criar usuário...";
+            try {
+                await auth.createUserWithEmailAndPassword(email, password);
+            } catch(err) {
+                errorMsg.innerText = parseFirebaseError(err.code);
+            }
+        };
+    }
+
+    function parseFirebaseError(code) {
+        switch (code) {
+            case 'auth/invalid-email': return 'Formato de e-mail inválido.';
+            case 'auth/user-not-found': return 'Usuário não encontrado. Crie uma conta.';
+            case 'auth/wrong-password': return 'Senha incorreta.';
+            case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
+            case 'auth/weak-password': return 'A senha é muito fraca.';
+            case 'auth/network-request-failed': return 'Erro de conexão. Verifique a internet.';
+            default: return 'Ocorreu um erro: ' + code;
+        }
+    }
+    
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            lockAuthStream = false;
+            currentUser = user;
+            await loadUserEvents(user.uid);
+        } else {
+            if (!lockAuthStream) {
+                currentUser = null;
+                renderLoginScreen();
+            }
+        }
+    });
+</script>
+</body>
+</html>
