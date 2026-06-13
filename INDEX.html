@@ -73,12 +73,12 @@
         .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; }
         .small-event-item { background: #e8a0a0; border-radius: 4px; padding: 1px 3px; margin: 1px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* TIMELINE GANTT */
-        .timeline-wrapper { overflow-x: auto; max-height: 70vh; border-radius: 20px; border: 1px solid #dee2e6; background: white; padding: 12px; }
-        .timeline-month-col { margin-bottom: 20px; border: 1px solid #cbd5e1; border-radius: 16px; overflow: hidden; background: #f8fafc; }
-        .timeline-month-header { background: #1b5e7a; color: white; padding: 10px 16px; font-weight: bold; font-size: 1.1rem; }
+        /* TIMELINE GANTT COM CABEÇALHOS FIXOS */
+        .timeline-wrapper { overflow-x: auto; overflow-y: auto; max-height: 70vh; border-radius: 20px; border: 1px solid #dee2e6; background: white; padding: 12px; }
+        .timeline-month-col { margin-bottom: 20px; border: 1px solid #cbd5e1; border-radius: 16px; overflow: hidden; background: #f8fafc; position: relative; }
+        .timeline-month-header { background: #1b5e7a; color: white; padding: 10px 16px; font-weight: bold; font-size: 1.1rem; position: sticky; top: 0; z-index: 20; }
         .timeline-bars-area { padding: 15px; position: relative; min-height: 60px; }
-        .timeline-days-axis { display: flex; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px; padding-bottom: 4px; }
+        .timeline-days-axis { display: flex; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px; padding-bottom: 4px; background: #f8fafc; position: sticky; top: 46px; z-index: 15; }
         .timeline-axis-day { flex: 1; text-align: center; font-size: 0.65rem; color: #64748b; min-width: 24px; }
         .timeline-parallel-row { position: relative; height: 32px; margin-bottom: 6px; background: rgba(255,255,255,0.6); border-radius: 20px; border: 1px solid #e2e8f0; }
         .timeline-event-bar { position: absolute; top: 4px; height: 22px; border-radius: 20px; display: flex; align-items: center; padding: 0 10px; color: white; font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -412,7 +412,7 @@
                 <div class="timeline-month-col">
                     <div class="timeline-month-header">${monthNames[monthData.index].toUpperCase()} / ${timelineYear}</div>
                     <div class="timeline-bars-area">
-                        <div class="timeline-days-axis" style="width: 100%;">${daysAxisHtml}</div>
+                        <div class="timeline-days-axis">${daysAxisHtml}</div>
                         ${rowsHtml}
                     </div>
                 </div>
