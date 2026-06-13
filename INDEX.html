@@ -239,7 +239,7 @@
     function showDetailModal(dateStr, eventsOfDay) {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `<div class="modal-container" style="max-width:400px;"><div style="padding:16px 20px;"><h3>📅 ${dateStr}</h3></div><div style="padding:20px;"><ul>${eventsOfDay.length ? eventsOfDay.map(ev => `<li style="border-left:4px solid ${ev.color}; padding-left:8px; margin-bottom:8px; list-style:none;"><strong>${ev.name}</strong></li>`).join('') : '<li>Nenhum evento</li>'}</ul><button class="btn-cancel" id="closeModalBtn" style="width:100%;">Fechar</button></div></div>`;
+        modal.innerHTML = `<div class="modal-container" style="max-width:400px;"><div style="padding:16px 20px;"><h3>📅 ${dateStr}</h3></div><div style="padding:20px;"><ul>${eventsOfDay.length ? eventsOfDay.map(ev => `<li style="border-left:4px solid ${ev.color}; padding-left:8px; margin-bottom:8px; list-style:none;"><strong>${ev.name}</strong></li>`).join('') : '<li>Nenhum afastamento</li>'}</ul><button class="btn-cancel" id="closeModalBtn" style="width:100%;">Fechar</button></div></div>`;
         document.body.appendChild(modal);
         modal.querySelector('#closeModalBtn').onclick = () => modal.remove();
     }
@@ -353,7 +353,7 @@
         }
 
         if (activeMonths.length === 0) {
-            document.getElementById('dynamicViewContainer').innerHTML = `<div style="padding:40px; text-align:center;">✨ Nenhuma marcação encontrada para ${timelineYear}. Adicione eventos ou feriados para visualizar na linha do tempo.</div><div class="year-selector"><button id="timelinePrevYear">◀ ${timelineYear-1}</button><span>${timelineYear}</span><button id="timelineNextYear">${timelineYear+1} ▶</button></div>`;
+            document.getElementById('dynamicViewContainer').innerHTML = `<div style="padding:40px; text-align:center;">✨ Nenhuma marcação encontrada para ${timelineYear}. Adicione afastamentos ou feriados para visualizar na linha do tempo.</div><div class="year-selector"><button id="timelinePrevYear">◀ ${timelineYear-1}</button><span>${timelineYear}</span><button id="timelineNextYear">${timelineYear+1} ▶</button></div>`;
             document.getElementById('timelinePrevYear').onclick = () => { timelineYear--; renderTimelineView(); };
             document.getElementById('timelineNextYear').onclick = () => { timelineYear++; renderTimelineView(); };
             return;
@@ -439,7 +439,7 @@
         const isEdit = !!eventToEdit;
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `<div class="modal-container" style="max-width:500px;"><div style="padding:16px 20px;"><h3>${isEdit ? 'Editar' : 'Adicionar'} ${type === 'national' ? 'Feriado' : 'Evento'}</h3></div><div style="padding:20px;"><div class="form-group"><label>Nome</label><input type="text" id="eventName" value="${eventToEdit?.name || ''}"></div><div class="form-group"><label>Data Início</label><input type="date" id="startDate" value="${eventToEdit?.start || ''}"></div><div class="form-group"><label>Data Fim</label><input type="date" id="endDate" value="${eventToEdit?.end || ''}"></div><div class="form-group"><label>Repetir</label><select id="repeatType"><option value="single">Somente este ano</option><option value="permanent" ${eventToEdit?.repeatType === 'permanent' ? 'selected' : ''}>Todos os anos</option></select></div><div class="form-group"><label>Cor</label><div class="color-palette" id="colorPaletteModal"></div></div><div class="modal-buttons"><button class="btn-cancel" id="cancelModalBtn">Cancelar</button><button class="btn-save" id="saveModalBtn">${isEdit ? 'Salvar' : 'Adicionar'}</button></div></div></div>`;
+        modal.innerHTML = `<div class="modal-container" style="max-width:500px;"><div style="padding:16px 20px;"><h3>${isEdit ? 'Editar' : 'Adicionar'} ${type === 'national' ? 'Feriado' : 'Afastamento'}</h3></div><div style="padding:20px;"><div class="form-group"><label>Nome</label><input type="text" id="eventName" value="${eventToEdit?.name || ''}"></div><div class="form-group"><label>Data Início</label><input type="date" id="startDate" value="${eventToEdit?.start || ''}"></div><div class="form-group"><label>Data Fim</label><input type="date" id="endDate" value="${eventToEdit?.end || ''}"></div><div class="form-group"><label>Repetir</label><select id="repeatType"><option value="single">Somente este ano</option><option value="permanent" ${eventToEdit?.repeatType === 'permanent' ? 'selected' : ''}>Todos os anos</option></select></div><div class="form-group"><label>Cor</label><div class="color-palette" id="colorPaletteModal"></div></div><div class="modal-buttons"><button class="btn-cancel" id="cancelModalBtn">Cancelar</button><button class="btn-save" id="saveModalBtn">${isEdit ? 'Salvar' : 'Adicionar'}</button></div></div></div>`;
         document.body.appendChild(modal);
         const palette = modal.querySelector('#colorPaletteModal');
         SOFT_COLORS.forEach(c => { const swatch = document.createElement('div'); swatch.className = `palette-swatch ${eventToEdit?.color === c ? 'selected' : ''}`; swatch.style.background = c; swatch.onclick = () => { palette.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('selected')); swatch.classList.add('selected'); }; palette.appendChild(swatch); });
@@ -473,7 +473,7 @@
         const eventosDiv = document.getElementById('eventosList');
         const feriadosDiv = document.getElementById('feriadosList');
         if (!eventosDiv) return;
-        eventosDiv.innerHTML = events.filter(e => e.type !== 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}${ev.start !== ev.end ? ` até ${ev.end}` : ''}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">Editar</button><button class="delete-event-btn" data-id="${ev.id}">Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:10px;">Nenhum evento pessoal cadastrado</div>';
+        eventosDiv.innerHTML = events.filter(e => e.type !== 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}${ev.start !== ev.end ? ` até ${ev.end}` : ''}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">Editar</button><button class="delete-event-btn" data-id="${ev.id}">Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:10px;">Nenhum afastamento cadastrado</div>';
         feriadosDiv.innerHTML = events.filter(e => e.type === 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">Editar</button><button class="delete-event-btn" data-id="${ev.id}">Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:10px;">Nenhum feriado cadastrado</div>';
         document.querySelectorAll('.edit-event-btn').forEach(btn => btn.onclick = () => { const ev = events.find(e => e.id == btn.dataset.id); if (ev) openEventModal(ev.type, ev); });
         document.querySelectorAll('.delete-event-btn').forEach(btn => btn.onclick = async () => { if (confirm("Tem certeza que deseja excluir este item?")) await deleteEvent(parseInt(btn.dataset.id)); });
@@ -482,7 +482,7 @@
     function openCadastroModal() {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `<div class="modal-container"><div class="modal-tabs"><button class="tab-btn active" data-tab="eventos">📋 Eventos</button><button class="tab-btn" data-tab="feriados">🏛️ Feriados</button></div><div class="tab-content"><div class="tab-pane active" id="tab-eventos"><div id="eventosList"></div></div><div class="tab-pane" id="tab-feriados"><div id="feriadosList"></div></div></div><div style="padding:16px"><button class="btn-cancel" id="closeCadastroBtn" style="width:100%">Fechar</button></div></div>`;
+        modal.innerHTML = `<div class="modal-container"><div class="modal-tabs"><button class="tab-btn active" data-tab="eventos">📋 Afastamentos</button><button class="tab-btn" data-tab="feriados">🏛️ Feriados</button></div><div class="tab-content"><div class="tab-pane active" id="tab-eventos"><div id="eventosList"></div></div><div class="tab-pane" id="tab-feriados"><div id="feriadosList"></div></div></div><div style="padding:16px"><button class="btn-cancel" id="closeCadastroBtn" style="width:100%">Fechar</button></div></div>`;
         document.body.appendChild(modal);
         renderCadastroList();
         const tabs = modal.querySelectorAll('.tab-btn'), panes = modal.querySelectorAll('.tab-pane');
@@ -519,10 +519,10 @@
                         </div>
                         <div class="action-buttons">
                             <button class="action-btn" id="btnFeriado">➕ Feriado</button>
-                            <button class="action-btn" id="btnEvento">📌 + Evento</button>
+                            <button class="action-btn" id="btnEvento">📌 + Afastamento</button>
                             <button class="action-btn" id="btnCadastro">📋 Cadastros</button>
                             <button class="action-btn toggle-btn ${showHolidays ? 'active-toggle' : ''}" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button>
-                            <button class="action-btn toggle-btn ${showPersonalEvents ? 'active-toggle' : ''}" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Eventos</button>
+                            <button class="action-btn toggle-btn ${showPersonalEvents ? 'active-toggle' : ''}" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Afastamentos</button>
                             <button class="action-btn" id="btnPDF">📄 Gerar PDF</button>
                         </div>
                     </div>
@@ -546,7 +546,7 @@
         document.getElementById('btnCadastro').onclick = openCadastroModal;
         document.getElementById('btnPDF').onclick = generatePDF;
         document.getElementById('btnToggleFeriados').onclick = () => { showHolidays = !showHolidays; renderCurrentView(); document.getElementById('btnToggleFeriados').classList.toggle('active-toggle', showHolidays); document.getElementById('btnToggleFeriados').innerText = `🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados`; };
-        document.getElementById('btnToggleEventos').onclick = () => { showPersonalEvents = !showPersonalEvents; renderCurrentView(); document.getElementById('btnToggleEventos').classList.toggle('active-toggle', showPersonalEvents); document.getElementById('btnToggleEventos').innerText = `👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Eventos`; };
+        document.getElementById('btnToggleEventos').onclick = () => { showPersonalEvents = !showPersonalEvents; renderCurrentView(); document.getElementById('btnToggleEventos').classList.toggle('active-toggle', showPersonalEvents); document.getElementById('btnToggleEventos').innerText = `👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Afastamentos`; };
         renderCurrentView();
     }
     
