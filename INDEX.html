@@ -30,10 +30,10 @@
         .loading { text-align: center; padding: 40px; color: #1b5e7a; font-weight: bold; font-size: 1.2rem; }
         .app-container { max-width: 1400px; width: 100%; background: white; border-radius: 32px; box-shadow: 0 20px 35px rgba(0,0,0,0.1); overflow: hidden; }
         
-        /* TÍTULO E DIREITOS AUTORAIS NO MESMO PLANO FIXOS NO TOPO */
-        .page-main-title { background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); color: white; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; position: sticky; top: 0; z-index: 1000; }
+        /* BARRA DO TÍTULO ESTÁVEL E FIXA NA MESMA ALTURA */
+        .page-main-title { background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); color: white; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; position: sticky; top: 0; height: 80px; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .title-group { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-        .title-group h1 { margin: 0; font-size: 1.8rem; font-weight: bold; }
+        .title-group h1 { margin: 0; font-size: 1.6rem; font-weight: bold; line-height: 1; }
         .title-copyright { font-size: 0.85rem; color: rgba(255, 255, 255, 0.85); font-weight: normal; white-space: nowrap; }
         
         /* BARRA DO USUÁRIO */
@@ -44,10 +44,13 @@
         .logout-btn:hover { background: #f1f5f9; }
 
         .main-calendar { padding: 24px 28px; }
-        .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e2edf2; }
+        
+        /* TOOLBAR FIXA */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e2edf2; min-height: 55px; }
         .view-buttons, .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
         .view-btn, .action-btn { background: white; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
         .view-btn.active, .action-btn.active-toggle { background: #2c7da0; color: white; border-color: #2c7da0; }
+        
         .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; background: #6c757d; color: white; border-radius: 16px; padding: 12px 0; margin-bottom: 12px; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .calendar-day { background: white; border: 2px solid #dee2e6; border-radius: 12px; min-height: 100px; padding: 8px 6px; cursor: pointer; transition: 0.1s; }
@@ -57,15 +60,18 @@
         .event-list { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; }
         .event-item { border-radius: 14px; padding: 2px 6px; background: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .bar-event { color: white; border-radius: 20px; font-weight: 500; }
+        
         .month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .month-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; border: none; }
         .current-month { font-size: 1.5rem; font-weight: bold; color: #212529; }
+        
         .quarter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .quarter-nav { display: flex; justify-content: space-between; margin-bottom: 24px; }
         .year-view-container { overflow-x: auto; }
         .year-grid { display: grid; grid-template-columns: repeat(2, minmax(350px, 1fr)); gap: 20px; }
         .single-month-grid { background: white; border-radius: 20px; padding: 15px; border: 1px solid #dee2e6; }
         .single-month-title { font-size: 1rem; font-weight: bold; text-align: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #6c757d; }
+        
         .small-calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.7rem; background: #6c757d; color: white; border-radius: 10px; padding: 6px 0; margin-bottom: 8px; }
         .small-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .small-calendar-day { border: 1px solid #dee2e6; border-radius: 8px; min-height: 55px; padding: 4px; cursor: pointer; background: white; }
@@ -73,16 +79,21 @@
         .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; }
         .small-event-item { background: #e8a0a0; border-radius: 4px; padding: 1px 3px; margin: 1px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* TIMELINE GANTT */
-        .timeline-wrapper { overflow-x: auto; max-height: 70vh; border-radius: 20px; border: 1px solid #dee2e6; background: white; padding: 12px; }
-        .timeline-month-col { margin-bottom: 20px; border: 1px solid #cbd5e1; border-radius: 16px; overflow: hidden; background: #f8fafc; }
-        .timeline-month-header { background: #1b5e7a; color: white; padding: 10px 16px; font-weight: bold; font-size: 1.1rem; }
-        .timeline-bars-area { padding: 15px; position: relative; min-height: 60px; }
-        .timeline-days-axis { display: flex; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px; padding-bottom: 4px; }
-        .timeline-axis-day { flex: 1; text-align: center; font-size: 0.65rem; color: #64748b; min-width: 24px; }
-        .timeline-parallel-row { position: relative; height: 32px; margin-bottom: 6px; background: rgba(255,255,255,0.6); border-radius: 20px; border: 1px solid #e2e8f0; }
-        .timeline-event-bar { position: absolute; top: 4px; height: 22px; border-radius: 20px; display: flex; align-items: center; padding: 0 10px; color: white; font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .timeline-event-bar:hover { filter: brightness(0.95); }
+        /* LINHA DO TEMPO COM CABEÇALHOS FIXOS */
+        .timeline-wrapper { overflow-y: auto; max-height: 65vh; border-radius: 20px; border: 1px solid #dee2e6; background: white; padding: 15px; }
+        .timeline-month-col { margin-bottom: 30px; border: 1px solid #cbd5e1; border-radius: 16px; overflow: hidden; background: #f8fafc; position: relative; }
+        
+        /* Trava o cabeçalho do mês no topo */
+        .timeline-month-header { background: #1b5e7a; color: white; padding: 12px 18px; font-weight: bold; font-size: 1.15rem; position: sticky; top: 0; z-index: 30; }
+        .timeline-bars-area { padding: 15px; position: relative; min-height: 80px; }
+        
+        /* Trava os números dos dias abaixo do título do mês */
+        .timeline-days-axis { display: flex; border-bottom: 1px solid #cbd5e1; margin-bottom: 12px; padding: 8px 0; background: #f8fafc; position: sticky; top: 45px; z-index: 25; box-shadow: 0 4px 6px -4px rgba(0,0,0,0.1); }
+        .timeline-axis-day { flex: 1; text-align: center; font-size: 0.75rem; font-weight: bold; color: #475569; min-width: 26px; }
+        
+        .timeline-parallel-row { position: relative; height: 34px; margin-bottom: 8px; background: rgba(255,255,255,0.8); border-radius: 20px; border: 1px solid #e2e8f0; width: 100%; display: flex; align-items: center; }
+        .timeline-event-bar { position: absolute; height: 26px; border-radius: 20px; display: flex; align-items: center; padding: 0 14px; color: white; font-size: 0.8rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: transform 0.1s; }
+        .timeline-event-bar:hover { filter: brightness(0.92); transform: scale(1.005); }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
         .modal-container { background: white; border-radius: 32px; width: 90%; max-width: 600px; max-height: 85vh; overflow: hidden; }
@@ -171,15 +182,18 @@
         return events.filter(ev => {
             if (ev.type === 'national' && !showHolidays) return false;
             if (ev.type !== 'national' && !showPersonalEvents) return false;
+            
+            const targetStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            
             if (ev.repeatType === 'permanent') {
-                const s = new Date(ev.start), e = new Date(ev.end);
+                const s = new Date(ev.start + 'T00:00:00'), e = new Date(ev.end + 'T00:00:00');
                 const startComp = new Date(year, s.getMonth(), s.getDate());
                 const endComp = new Date(year, e.getMonth(), e.getDate());
                 const targetDate = new Date(year, month, day);
-                if (ev.start === ev.end) return startComp.getMonth() === month && startComp.getDate() === day;
+                
+                if (ev.start === ev.end) return s.getMonth() === month && s.getDate() === day;
                 return targetDate >= startComp && targetDate <= endComp;
             } else {
-                const targetDateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                 if (ev.start === ev.end && ev.start === targetStr) return true;
                 return ev.start <= targetStr && ev.end >= targetStr;
             }
@@ -190,18 +204,23 @@
         if (ev.type === 'national' && !showHolidays) return false;
         if (ev.type !== 'national' && !showPersonalEvents) return false;
 
-        const s = new Date(ev.start + 'T00:00:00');
-        const e = new Date(ev.end + 'T00:00:00');
-        
         if (ev.repeatType === 'permanent') {
-            return true;
+            const s = new Date(ev.start + 'T00:00:00');
+            const e = new Date(ev.end + 'T00:00:00');
+            const startMonth = s.getMonth();
+            const endMonth = e.getMonth();
+            
+            if (startMonth <= endMonth) return month >= startMonth && month <= endMonth;
+            return month >= startMonth || month <= endMonth;
         }
         
-        const startMonth = s.getFullYear() * 12 + s.getMonth();
-        const endMonth = e.getFullYear() * 12 + e.getMonth();
-        const targetMonth = year * 12 + month;
+        const s = new Date(ev.start + 'T00:00:00');
+        const e = new Date(ev.end + 'T00:00:00');
+        const startMonthAbs = s.getFullYear() * 12 + s.getMonth();
+        const endMonthAbs = e.getFullYear() * 12 + e.getMonth();
+        const targetMonthAbs = year * 12 + month;
 
-        return targetMonth >= startMonth && targetMonth <= endMonth;
+        return targetMonthAbs >= startMonthAbs && targetMonthAbs <= endMonthAbs;
     }
 
     function getEventsForMonthParallel(month, year) {
@@ -353,7 +372,9 @@
         }
 
         if (activeMonths.length === 0) {
-            document.getElementById('dynamicViewContainer').innerHTML = `<div style="padding:40px; text-align:center;">✨ Nenhuma marcação encontrada para ${timelineYear}. Adicione afastamentos ou feriados para visualizar na linha do tempo.</div><div class="year-selector"><button id="timelinePrevYear">◀ ${timelineYear-1}</button><span>${timelineYear}</span><button id="timelineNextYear">${timelineYear+1} ▶</button></div>`;
+            document.getElementById('dynamicViewContainer').innerHTML = `
+                <div style="padding:40px; text-align:center; color:#5c6f87;">✨ Nenhum afastamento ou feriado agendado para o ano de ${timelineYear}.</div>
+                <div class="year-selector"><button id="timelinePrevYear">◀ ${timelineYear-1}</button><span>${timelineYear}</span><button id="timelineNextYear">${timelineYear+1} ▶</button></div>`;
             document.getElementById('timelinePrevYear').onclick = () => { timelineYear--; renderTimelineView(); };
             document.getElementById('timelineNextYear').onclick = () => { timelineYear++; renderTimelineView(); };
             return;
@@ -365,33 +386,28 @@
         activeMonths.forEach(monthData => {
             const daysInMonth = new Date(timelineYear, monthData.index + 1, 0).getDate();
             
-            // Gerar eixo de dias
             let daysAxisHtml = '';
             for (let d = 1; d <= daysInMonth; d++) {
                 daysAxisHtml += `<div class="timeline-axis-day">${d}</div>`;
             }
 
-            // Gerar linhas paralelas de eventos
             let rowsHtml = '';
             monthData.events.forEach(ev => {
-                const sDate = new Date(ev.start + 'T00:00:00');
-                const eDate = new Date(ev.end + 'T00:00:00');
-
-                // Limpar datas relativas ao mês atual
                 let startDay = 1;
                 let endDay = daysInMonth;
 
-                if (sDate.getFullYear() === timelineYear && sDate.getMonth() === monthData.index) {
-                    startDay = sDate.getDate();
-                }
-                if (eDate.getFullYear() === timelineYear && eDate.getMonth() === monthData.index) {
-                    endDay = eDate.getDate();
-                }
-
-                // Em repetições anuais permanentes em outros meses, ajustar limites
                 if (ev.repeatType === 'permanent') {
-                    startDay = 1;
-                    endDay = daysInMonth;
+                    const originDate = new Date(ev.start + 'T00:00:00');
+                    const originEndDate = new Date(ev.end + 'T00:00:00');
+                    
+                    if (originDate.getMonth() === monthData.index) startDay = originDate.getDate();
+                    if (originEndDate.getMonth() === monthData.index) endDay = originEndDate.getDate();
+                } else {
+                    const sDate = new Date(ev.start + 'T00:00:00');
+                    const eDate = new Date(ev.end + 'T00:00:00');
+
+                    if (sDate.getFullYear() === timelineYear && sDate.getMonth() === monthData.index) startDay = sDate.getDate();
+                    if (eDate.getFullYear() === timelineYear && eDate.getMonth() === monthData.index) endDay = eDate.getDate();
                 }
 
                 const leftPct = ((startDay - 1) / daysInMonth) * 100;
@@ -412,7 +428,7 @@
                 <div class="timeline-month-col">
                     <div class="timeline-month-header">${monthNames[monthData.index].toUpperCase()} / ${timelineYear}</div>
                     <div class="timeline-bars-area">
-                        <div class="timeline-days-axis" style="width: 100%;">${daysAxisHtml}</div>
+                        <div class="timeline-days-axis">${daysAxisHtml}</div>
                         ${rowsHtml}
                     </div>
                 </div>
@@ -427,10 +443,15 @@
     }
     
     function renderCurrentView() {
+        // Atualiza os estados ativos dos botões visualmente
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === currentView);
+        });
+
         if (currentView === 'month') renderMonthView();
         else if (currentView === 'quarter') renderQuarterView();
         else if (currentView === 'year') renderYearView();
-        else renderTimelineView();
+        else if (currentView === 'timeline') renderTimelineView();
     }
     
     let currentEditingId = null;
@@ -531,7 +552,7 @@
                 </div>
             </div>
         `;
-        document.querySelectorAll('.view-btn').forEach(btn => btn.onclick = () => { currentView = btn.dataset.view; if (currentView === 'timeline') timelineYear = currentYear; renderMainApp(); });
+        document.querySelectorAll('.view-btn').forEach(btn => btn.onclick = () => { currentView = btn.dataset.view; if (currentView === 'timeline') timelineYear = currentYear; renderCurrentView(); });
         document.getElementById('logoutBtn').onclick = async () => { 
             lockAuthStream = true;
             currentUser = null; 
