@@ -36,9 +36,20 @@
         .loading { text-align: center; padding: 40px; color: #1b5e7a; font-weight: bold; font-size: 1.2rem; }
         
         /* APP PRINCIPAL */
-        .app-container { max-width: 1400px; width: 100%; background: white; border-radius: 32px; box-shadow: 0 20px 35px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; }
+        .app-container { 
+            max-width: 1400px; 
+            width: 100%; 
+            background: white; 
+            border-radius: 32px; 
+            box-shadow: 0 20px 35px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            height: 85vh;
+            max-height: 85vh;
+        }
         
-        /* CABEÇALHO FIXO */
+        /* CABEÇALHO FIXO - nunca se move */
         .page-main-title { 
             background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); 
             color: white; 
@@ -48,14 +59,11 @@
             align-items: center; 
             flex-wrap: wrap; 
             gap: 20px; 
-            position: sticky; 
-            top: 0; 
-            height: 80px; 
+            flex-shrink: 0;
             min-height: 80px;
-            max-height: 80px;
+            height: auto;
             z-index: 1000; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-            flex-shrink: 0;
         }
         .title-group { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
         .title-group h1 { margin: 0; font-size: 1.6rem; font-weight: bold; line-height: 1; }
@@ -67,10 +75,13 @@
         .logout-btn { background: white; color: #1b5e7a; border: none; padding: 6px 14px; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 0.85rem; flex-shrink: 0; }
         .logout-btn:hover { background: #f1f5f9; }
 
+        /* ÁREA DE CONTEÚDO ROLÁVEL */
         .main-content {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             background: white;
+            padding: 0px;
         }
         .main-calendar { padding: 24px 28px; }
         
@@ -382,6 +393,10 @@
         else if (currentView === 'quarter') renderQuarterView();
         else if (currentView === 'year') renderYearView();
         else renderMonthView();
+        
+        // pequeno ajuste para forçar o scroll no topo do conteúdo (mas sem mover o cabeçalho)
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) mainContent.scrollTop = 0;
     }
     
     let currentEditingId = null;
