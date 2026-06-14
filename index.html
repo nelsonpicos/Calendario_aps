@@ -19,7 +19,7 @@
         
         /* TELA DE LOGIN */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 2000; }
-        .login-card { background: white; border-radius: 32px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+        .login-card { background: white; border-radius: 32px; padding: 40px; text-align: center; max-width: 450px; width: 90%; }
         .login-card h1 { color: #1b5e7a; margin-bottom: 10px; font-size: 1.5rem; }
         .login-card p { color: #5c6f87; margin-bottom: 24px; }
         .form-group-login { margin-bottom: 15px; text-align: left; }
@@ -37,7 +37,7 @@
         
         /* APP PRINCIPAL - LARGURA FIXA CONSISTENTE */
         .app-container { 
-            max-width: 1400px; 
+            max-width: 1600px; 
             width: 100%; 
             background: white; 
             border-radius: 32px; 
@@ -45,22 +45,22 @@
             overflow: hidden; 
             display: flex; 
             flex-direction: column; 
-            height: 85vh;
-            max-height: 85vh;
+            height: 90vh;
+            max-height: 90vh;
         }
         
         /* CABEÇALHO FIXO */
         .page-main-title { 
             background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); 
             color: white; 
-            padding: 20px 24px; 
+            padding: 20px 28px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             flex-wrap: wrap; 
             gap: 20px; 
             flex-shrink: 0;
-            min-height: 80px;
+            min-height: 85px;
             height: auto;
             z-index: 1000; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
@@ -69,93 +69,96 @@
         .title-group h1 { margin: 0; font-size: 1.6rem; font-weight: bold; line-height: 1; }
         .title-copyright { font-size: 0.85rem; color: rgba(255,255,255,0.85); font-weight: normal; white-space: nowrap; }
         
-        .user-info { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 50px; flex-wrap: nowrap; }
-        .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1b5e7a; text-transform: uppercase; flex-shrink: 0; }
-        .user-email-display { color: white; font-size: 0.95rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
-        .logout-btn { background: white; color: #1b5e7a; border: none; padding: 6px 14px; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 0.85rem; flex-shrink: 0; }
+        .user-info { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.2); padding: 6px 20px; border-radius: 50px; flex-wrap: nowrap; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1b5e7a; text-transform: uppercase; flex-shrink: 0; }
+        .user-email-display { color: white; font-size: 0.95rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+        .logout-btn { background: white; color: #1b5e7a; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 0.85rem; flex-shrink: 0; }
         .logout-btn:hover { background: #f1f5f9; }
 
         /* ÁREA DE CONTEÚDO ROLÁVEL */
         .main-content {
             flex: 1;
             overflow-y: auto;
-            overflow-x: hidden;
+            overflow-x: auto;
             background: white;
             padding: 0px;
         }
-        .main-calendar { padding: 24px 28px; }
+        .main-calendar { padding: 28px 32px; min-width: 1000px; }
         
-        .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e2edf2; min-height: 55px; }
-        .view-buttons, .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-        .view-btn, .action-btn { background: white; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; background: #f8fafc; }
+        .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e2edf2; min-height: 60px; }
+        .view-buttons, .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .view-btn, .action-btn { background: white; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 18px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; background: #f8fafc; white-space: nowrap; }
         .view-btn.active, .action-btn.active-toggle { background: #2c7da0; color: white; border-color: #2c7da0; }
         
         /* ESTILOS DOS DIAS (moldura na mesma cor da linha do cabeçalho) */
-        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; background: #6c757d; color: white; border-radius: 16px; padding: 12px 0; margin-bottom: 12px; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-        .calendar-day { background: white; border: 2px solid #6c757d; border-radius: 12px; min-height: 100px; padding: 8px 6px; cursor: pointer; transition: 0.1s; }
+        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; background: #6c757d; color: white; border-radius: 20px; padding: 14px 0; margin-bottom: 16px; font-size: 1rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+        .calendar-day { background: white; border: 2px solid #6c757d; border-radius: 16px; min-height: 110px; padding: 10px 8px; cursor: pointer; transition: 0.1s; }
         .calendar-day:hover { background: #f8fafc; transform: scale(0.98); }
         .calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
-        .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 8px; text-align: right; color: #212529; }
-        .event-list { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; }
-        .event-item { border-radius: 14px; padding: 2px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; background: #f1f5f9; }
-        /* texto preto para eventos normais e também para barras (para manter legibilidade) */
+        .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 10px; text-align: right; color: #212529; }
+        .event-list { display: flex; flex-direction: column; gap: 5px; font-size: 0.75rem; }
+        .event-item { border-radius: 14px; padding: 3px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; background: #f1f5f9; }
         .bar-event { font-weight: 500; color: #000000 !important; background-color: #e9ecef; border-left: 4px solid currentColor; }
         
-        .month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .month-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; border: none; }
-        .current-month { font-size: 1.5rem; font-weight: bold; color: #212529; }
+        .month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+        .month-nav button { background: #6c757d; color: white; padding: 10px 24px; border-radius: 40px; cursor: pointer; border: none; font-size: 1rem; }
+        .current-month { font-size: 1.6rem; font-weight: bold; color: #212529; }
         
-        /* TRIMESTRE - layout com largura fixa consistente (mesmo estilo do mês/ano) */
+        /* TRIMESTRE - layout fixo e estável */
         .quarter-view-container { width: 100%; overflow-x: auto; }
         .quarter-grid { 
             display: grid; 
-            grid-template-columns: repeat(3, minmax(0, 1fr)); 
-            gap: 20px; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 24px; 
             width: 100%;
         }
-        .quarter-nav { display: flex; justify-content: space-between; margin-bottom: 24px; }
-        .quarter-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; border: none; cursor: pointer; }
+        .quarter-nav { display: flex; justify-content: space-between; margin-bottom: 28px; }
+        .quarter-nav button { background: #6c757d; color: white; padding: 10px 24px; border-radius: 40px; border: none; cursor: pointer; font-size: 1rem; }
+        .quarter-nav span { font-size: 1.2rem; font-weight: 500; }
         
-        /* ANO */
+        /* ANO - 2 colunas largas */
         .year-view-container { overflow-x: auto; }
-        .year-grid { display: grid; grid-template-columns: repeat(2, minmax(350px, 1fr)); gap: 20px; }
-        .single-month-grid { background: white; border-radius: 20px; padding: 15px; border: 1px solid #dee2e6; }
-        .single-month-title { font-size: 1rem; font-weight: bold; text-align: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #6c757d; }
+        .year-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .single-month-grid { background: white; border-radius: 24px; padding: 18px; border: 1px solid #dee2e6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .single-month-title { font-size: 1.1rem; font-weight: bold; text-align: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #6c757d; }
         
-        /* CARD PEQUENO (trimestre / ano) - mesma estrutura consistente */
-        .small-calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.7rem; background: #6c757d; color: white; border-radius: 10px; padding: 6px 0; margin-bottom: 8px; }
-        .small-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-        .small-calendar-day { border: 1px solid #6c757d; border-radius: 8px; min-height: 55px; padding: 4px; cursor: pointer; background: white; }
+        /* CARD PEQUENO (trimestre / ano) - dimensões confortáveis */
+        .small-calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.75rem; background: #6c757d; color: white; border-radius: 12px; padding: 8px 0; margin-bottom: 10px; }
+        .small-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .small-calendar-day { border: 1px solid #6c757d; border-radius: 10px; min-height: 65px; padding: 5px; cursor: pointer; background: white; }
         .small-calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
-        .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; color: #212529; }
-        .small-event-item { border-radius: 4px; padding: 1px 3px; margin: 1px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; background: #e9ecef; font-weight: 500; }
+        .small-day-number { font-weight: bold; font-size: 0.75rem; text-align: right; margin-bottom: 4px; color: #212529; }
+        .small-event-item { border-radius: 6px; padding: 2px 4px; margin: 2px 0; font-size: 0.65rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; background: #e9ecef; font-weight: 500; }
 
         /* MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-container { background: white; border-radius: 32px; width: 90%; max-width: 600px; max-height: 85vh; overflow: hidden; }
+        .modal-container { background: white; border-radius: 32px; width: 90%; max-width: 650px; max-height: 85vh; overflow: hidden; }
         .modal-tabs { display: flex; border-bottom: 2px solid #e2edf2; }
-        .tab-btn { flex: 1; padding: 16px; background: #f8fafc; border: none; cursor: pointer; font-weight: bold; }
+        .tab-btn { flex: 1; padding: 16px; background: #f8fafc; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; }
         .tab-btn.active { background: white; color: #2c7da0; border-bottom: 3px solid #2c7da0; }
-        .tab-content { padding: 20px; overflow-y: auto; max-height: 60vh; }
+        .tab-content { padding: 24px; overflow-y: auto; max-height: 60vh; }
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
-        .event-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #edf2f7; margin-bottom: 8px; }
-        .event-actions { display: flex; gap: 8px; }
-        .edit-event-btn { background: #f0c8a0; padding: 4px 12px; border-radius: 20px; border: none; cursor: pointer; }
-        .delete-event-btn { background: #f0b8b8; padding: 4px 12px; border-radius: 20px; border: none; cursor: pointer; }
-        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .event-list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-bottom: 1px solid #edf2f7; margin-bottom: 10px; background: #fefefe; border-radius: 16px; }
+        .event-actions { display: flex; gap: 12px; }
+        .edit-event-btn { background: #f0c8a0; padding: 6px 14px; border-radius: 20px; border: none; cursor: pointer; font-weight: 500; }
+        .delete-event-btn { background: #f0b8b8; padding: 6px 14px; border-radius: 20px; border: none; cursor: pointer; font-weight: 500; }
+        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-weight: 600; font-size: 0.9rem; }
+        .form-group input, .form-group select { padding: 10px 14px; border-radius: 16px; border: 1px solid #cbd5e1; font-size: 0.95rem; }
         
         /* PALETA DE CORES SÓLIDAS */
-        .color-palette { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
-        .palette-swatch { width: 40px; height: 40px; border-radius: 12px; cursor: pointer; border: 3px solid transparent; transition: 0.1s; }
+        .color-palette { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+        .palette-swatch { width: 44px; height: 44px; border-radius: 14px; cursor: pointer; border: 3px solid transparent; transition: 0.1s; }
         .palette-swatch.selected { border: 3px solid #0f3b5f; transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         
-        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
-        .btn-save { background: #2c7da0; color: white; padding: 10px 20px; border-radius: 30px; border: none; cursor: pointer; }
-        .btn-cancel { background: #e2e8f0; padding: 10px 20px; border-radius: 30px; border: none; cursor: pointer; }
-        .year-selector { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
-        footer { text-align: center; font-size: 0.7rem; padding: 12px; color: #5c6f87; }
+        .modal-buttons { display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px; }
+        .btn-save { background: #2c7da0; color: white; padding: 12px 24px; border-radius: 40px; border: none; cursor: pointer; font-weight: bold; font-size: 0.95rem; }
+        .btn-cancel { background: #e2e8f0; color: #1e4a6e; padding: 12px 24px; border-radius: 40px; border: none; cursor: pointer; font-weight: bold; font-size: 0.95rem; }
+        .year-selector { display: flex; justify-content: center; gap: 25px; margin-top: 25px; align-items: center; }
+        .year-selector button { background: #6c757d; color: white; padding: 8px 24px; border-radius: 40px; border: none; cursor: pointer; font-weight: bold; }
+        footer { text-align: center; font-size: 0.75rem; padding: 16px; color: #5c6f87; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -276,7 +279,7 @@
     function showDetailModal(dateStr, eventsOfDay) {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `<div class="modal-container" style="max-width:400px;"><div style="padding:16px 20px;"><h3>📅 ${dateStr}</h3></div><div style="padding:20px;"><ul>${eventsOfDay.length ? eventsOfDay.map(ev => `<li style="border-left:4px solid ${ev.color}; padding-left:8px; margin-bottom:8px; list-style:none;"><strong>${ev.name}</strong></li>`).join('') : '<li>Nenhum afastamento</li>'}</ul><button class="btn-cancel" id="closeModalBtn" style="width:100%;">Fechar</button></div></div>`;
+        modal.innerHTML = `<div class="modal-container" style="max-width:450px;"><div style="padding:20px 24px;"><h3>📅 ${dateStr}</h3></div><div style="padding:20px 24px;"><ul style="margin:0; padding-left:20px;">${eventsOfDay.length ? eventsOfDay.map(ev => `<li style="border-left:4px solid ${ev.color}; padding-left:12px; margin-bottom:12px; list-style:none;"><strong>${ev.name}</strong></li>`).join('') : '<li>Nenhum afastamento</li>'}</ul><button class="btn-cancel" id="closeModalBtn" style="width:100%; margin-top:10px;">Fechar</button></div></div>`;
         document.body.appendChild(modal);
         modal.querySelector('#closeModalBtn').onclick = () => modal.remove();
     }
@@ -302,9 +305,9 @@
             let evHtml = '';
             for (const ev of evs) {
                 if (ev.start !== ev.end) {
-                    evHtml += `<div class="event-item bar-event" style="background:#e9ecef; color:#000000; border-left: 3px solid ${ev.color};">📅 ${ev.name}</div>`;
+                    evHtml += `<div class="event-item bar-event" style="background:#e9ecef; border-left: 4px solid ${ev.color};">📅 ${ev.name}</div>`;
                 } else {
-                    evHtml += `<div class="event-item" style="background:#e9ecef; color:#000000; border-left: 3px solid ${ev.color};">${ev.name}</div>`;
+                    evHtml += `<div class="event-item" style="background:#e9ecef; border-left: 4px solid ${ev.color};">${ev.name}</div>`;
                 }
             }
             const cls = cell.current ? '' : 'other-month';
@@ -351,9 +354,9 @@
                 const evs = getEventsForDate(y, m, d);
                 let evHtml = '';
                 for (const ev of evs) {
-                    evHtml += `<div class="small-event-item" style="background:#e9ecef; color:#000000; border-left: 2px solid ${ev.color};">${ev.name.substring(0,8)}</div>`;
+                    evHtml += `<div class="small-event-item" style="background:#e9ecef; border-left: 2px solid ${ev.color};">${ev.name.substring(0,9)}</div>`;
                 }
-                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="small-day-number">${d}</div><div class="small-event-list">${evHtml || ''}</div></div>`;
+                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="small-day-number">${d}</div><div>${evHtml || ''}</div></div>`;
             }
             monthDiv.innerHTML += gridHtml + `</div>`;
             grid.appendChild(monthDiv);
@@ -384,9 +387,9 @@
                 const evs = getEventsForDate(y, monthIdx, d);
                 let evHtml = '';
                 for (const ev of evs) {
-                    evHtml += `<div class="small-event-item" style="background:#e9ecef; color:#000000; border-left: 2px solid ${ev.color};">${ev.name.substring(0,8)}</div>`;
+                    evHtml += `<div class="small-event-item" style="background:#e9ecef; border-left: 2px solid ${ev.color};">${ev.name.substring(0,9)}</div>`;
                 }
-                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${monthIdx}" data-day="${d}"><div class="small-day-number">${d}</div><div class="small-event-list">${evHtml || ''}</div></div>`;
+                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${monthIdx}" data-day="${d}"><div class="small-day-number">${d}</div><div>${evHtml || ''}</div></div>`;
             }
             html += gridHtml + `</div></div>`;
         }
@@ -409,7 +412,6 @@
         else if (currentView === 'year') renderYearView();
         else renderMonthView();
         
-        // garantir scroll no topo do conteúdo
         const mainContent = document.querySelector('.main-content');
         if (mainContent) mainContent.scrollTop = 0;
     }
@@ -420,7 +422,7 @@
         const isEdit = !!eventToEdit;
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `<div class="modal-container" style="max-width:500px;"><div style="padding:16px 20px;"><h3>${isEdit ? 'Editar' : 'Adicionar'} ${type === 'national' ? 'Feriado' : 'Afastamento'}</h3></div><div style="padding:20px;"><div class="form-group"><label>Nome</label><input type="text" id="eventName" value="${eventToEdit?.name || ''}" placeholder="Ex: Férias João, Carnaval"></div><div class="form-group"><label>Data Início</label><input type="date" id="startDate" value="${eventToEdit?.start || ''}"></div><div class="form-group"><label>Data Fim (opcional)</label><input type="date" id="endDate" value="${eventToEdit?.end || ''}"></div><div class="form-group"><label>Repetir</label><select id="repeatType"><option value="single">📅 Somente este ano</option><option value="permanent" ${eventToEdit?.repeatType === 'permanent' ? 'selected' : ''}>♾️ Todos os anos</option></select></div><div class="form-group"><label>Cor</label><div class="color-palette" id="colorPaletteModal"></div></div><div class="modal-buttons"><button class="btn-cancel" id="cancelModalBtn">Cancelar</button><button class="btn-save" id="saveModalBtn">${isEdit ? 'Salvar' : 'Adicionar'}</button></div></div></div>`;
+        modal.innerHTML = `<div class="modal-container" style="max-width:550px;"><div style="padding:20px 24px;"><h3>${isEdit ? 'Editar' : 'Adicionar'} ${type === 'national' ? 'Feriado' : 'Afastamento'}</h3></div><div style="padding:20px 24px;"><div class="form-group"><label>Nome</label><input type="text" id="eventName" value="${eventToEdit?.name || ''}" placeholder="Ex: Férias João, Carnaval"></div><div class="form-group"><label>Data Início</label><input type="date" id="startDate" value="${eventToEdit?.start || ''}"></div><div class="form-group"><label>Data Fim (opcional)</label><input type="date" id="endDate" value="${eventToEdit?.end || ''}"></div><div class="form-group"><label>Repetir</label><select id="repeatType"><option value="single">📅 Somente este ano</option><option value="permanent" ${eventToEdit?.repeatType === 'permanent' ? 'selected' : ''}>♾️ Todos os anos</option></select></div><div class="form-group"><label>Cor</label><div class="color-palette" id="colorPaletteModal"></div></div><div class="modal-buttons"><button class="btn-cancel" id="cancelModalBtn">Cancelar</button><button class="btn-save" id="saveModalBtn">${isEdit ? 'Salvar' : 'Adicionar'}</button></div></div></div>`;
         document.body.appendChild(modal);
         const palette = modal.querySelector('#colorPaletteModal');
         SOLID_COLORS.forEach(c => { 
@@ -468,8 +470,8 @@
         const eventosDiv = document.getElementById('eventosList');
         const feriadosDiv = document.getElementById('feriadosList');
         if (!eventosDiv) return;
-        eventosDiv.innerHTML = events.filter(e => e.type !== 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}${ev.start !== ev.end ? ` até ${ev.end}` : ''}</small><br><small style="color:${ev.color};">● Cor: ${ev.color}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:10px;">Nenhum afastamento cadastrado</div>';
-        feriadosDiv.innerHTML = events.filter(e => e.type === 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}</small><br><small style="color:${ev.color};">● Cor: ${ev.color}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:10px;">Nenhum feriado cadastrado</div>';
+        eventosDiv.innerHTML = events.filter(e => e.type !== 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}${ev.start !== ev.end ? ` até ${ev.end}` : ''}</small><br><small style="color:${ev.color};">● Cor: ${ev.color}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:20px;">Nenhum afastamento cadastrado</div>';
+        feriadosDiv.innerHTML = events.filter(e => e.type === 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}</small><br><small style="color:${ev.color};">● Cor: ${ev.color}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:20px;">Nenhum feriado cadastrado</div>';
         document.querySelectorAll('.edit-event-btn').forEach(btn => btn.onclick = () => { const ev = events.find(e => e.id == btn.dataset.id); if (ev) openEventModal(ev.type, ev); });
         document.querySelectorAll('.delete-event-btn').forEach(btn => btn.onclick = async () => { if (confirm("Tem certeza que deseja excluir este item?")) await deleteEvent(parseInt(btn.dataset.id)); });
     }
@@ -477,7 +479,7 @@
     function openCadastroModal() {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `<div class="modal-container"><div class="modal-tabs"><button class="tab-btn active" data-tab="eventos">📋 Afastamentos</button><button class="tab-btn" data-tab="feriados">🏛️ Feriados</button></div><div class="tab-content"><div class="tab-pane active" id="tab-eventos"><div id="eventosList"></div></div><div class="tab-pane" id="tab-feriados"><div id="feriadosList"></div></div></div><div style="padding:16px"><button class="btn-cancel" id="closeCadastroBtn" style="width:100%">Fechar</button></div></div>`;
+        modal.innerHTML = `<div class="modal-container"><div class="modal-tabs"><button class="tab-btn active" data-tab="eventos">📋 Afastamentos</button><button class="tab-btn" data-tab="feriados">🏛️ Feriados</button></div><div class="tab-content"><div class="tab-pane active" id="tab-eventos"><div id="eventosList"></div></div><div class="tab-pane" id="tab-feriados"><div id="feriadosList"></div></div></div><div style="padding:20px"><button class="btn-cancel" id="closeCadastroBtn" style="width:100%">Fechar</button></div></div>`;
         document.body.appendChild(modal);
         renderCadastroList();
         const tabs = modal.querySelectorAll('.tab-btn'), panes = modal.querySelectorAll('.tab-pane');
@@ -522,7 +524,7 @@
                             </div>
                         </div>
                         <div id="dynamicViewContainer"></div>
-                        <footer>Dados sincronizados na nuvem</footer>
+                        <footer>Dados sincronizados na nuvem • Visualizações com largura consistente</footer>
                     </div>
                 </div>
             </div>
