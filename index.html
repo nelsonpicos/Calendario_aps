@@ -35,7 +35,7 @@
         .auth-error { color: #dc2626; font-size: 0.85rem; margin-top: 15px; min-height: 20px; font-weight: 500; }
         .loading { text-align: center; padding: 40px; color: #1b5e7a; font-weight: bold; font-size: 1.2rem; }
         
-        /* APP PRINCIPAL - LARGURA FIXA CONSISTENTE */
+        /* APP PRINCIPAL - CABEÇALHO FIXO E ÁREA DE CONTEÚDO SEPARADA */
         .app-container { 
             max-width: 1600px; 
             width: 100%; 
@@ -49,7 +49,7 @@
             max-height: 90vh;
         }
         
-        /* CABEÇALHO FIXO */
+        /* CABEÇALHO PRINCIPAL (NUNCA MUDA) */
         .page-main-title { 
             background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); 
             color: white; 
@@ -75,20 +75,32 @@
         .logout-btn { background: white; color: #1b5e7a; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 0.85rem; flex-shrink: 0; }
         .logout-btn:hover { background: #f1f5f9; }
 
-        /* ÁREA DE CONTEÚDO ROLÁVEL */
-        .main-content {
+        /* BARRA DE FERRAMENTAS - FIXA E NUNCA É RECRIADA */
+        .toolbar-fixed {
+            flex-shrink: 0;
+            background: white;
+            border-bottom: 2px solid #e2edf2;
+            padding: 20px 28px 12px 28px;
+        }
+        .toolbar-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .view-buttons, .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .view-btn, .action-btn { background: #f8fafc; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 18px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .view-btn.active, .action-btn.active-toggle { background: #2c7da0; color: white; border-color: #2c7da0; }
+        
+        /* ÁREA DE CONTEÚDO DINÂMICA - LIMPA E RECONSTRUÍDA */
+        .content-area {
             flex: 1;
             overflow-y: auto;
             overflow-x: auto;
             background: white;
-            padding: 0px;
+            padding: 28px 32px;
         }
-        .main-calendar { padding: 28px 32px; min-width: 1000px; }
-        
-        .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e2edf2; min-height: 60px; }
-        .view-buttons, .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
-        .view-btn, .action-btn { background: white; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 18px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; background: #f8fafc; white-space: nowrap; }
-        .view-btn.active, .action-btn.active-toggle { background: #2c7da0; color: white; border-color: #2c7da0; }
         
         /* ESTILOS DOS DIAS (moldura na mesma cor da linha do cabeçalho) */
         .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; background: #6c757d; color: white; border-radius: 20px; padding: 14px 0; margin-bottom: 16px; font-size: 1rem; }
@@ -105,25 +117,20 @@
         .month-nav button { background: #6c757d; color: white; padding: 10px 24px; border-radius: 40px; cursor: pointer; border: none; font-size: 1rem; }
         .current-month { font-size: 1.6rem; font-weight: bold; color: #212529; }
         
-        /* TRIMESTRE - layout fixo e estável */
+        /* TRIMESTRE - layout fixo */
         .quarter-view-container { width: 100%; overflow-x: auto; }
-        .quarter-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 24px; 
-            width: 100%;
-        }
+        .quarter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; }
         .quarter-nav { display: flex; justify-content: space-between; margin-bottom: 28px; }
         .quarter-nav button { background: #6c757d; color: white; padding: 10px 24px; border-radius: 40px; border: none; cursor: pointer; font-size: 1rem; }
         .quarter-nav span { font-size: 1.2rem; font-weight: 500; }
         
-        /* ANO - 2 colunas largas */
+        /* ANO - 2 colunas */
         .year-view-container { overflow-x: auto; }
         .year-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
         .single-month-grid { background: white; border-radius: 24px; padding: 18px; border: 1px solid #dee2e6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .single-month-title { font-size: 1.1rem; font-weight: bold; text-align: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #6c757d; }
         
-        /* CARD PEQUENO (trimestre / ano) - dimensões confortáveis */
+        /* CARD PEQUENO (trimestre / ano) */
         .small-calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.75rem; background: #6c757d; color: white; border-radius: 12px; padding: 8px 0; margin-bottom: 10px; }
         .small-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .small-calendar-day { border: 1px solid #6c757d; border-radius: 10px; min-height: 65px; padding: 5px; cursor: pointer; background: white; }
@@ -148,7 +155,6 @@
         .form-group label { font-weight: 600; font-size: 0.9rem; }
         .form-group input, .form-group select { padding: 10px 14px; border-radius: 16px; border: 1px solid #cbd5e1; font-size: 0.95rem; }
         
-        /* PALETA DE CORES SÓLIDAS */
         .color-palette { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
         .palette-swatch { width: 44px; height: 44px; border-radius: 14px; cursor: pointer; border: 3px solid transparent; transition: 0.1s; }
         .palette-swatch.selected { border: 3px solid #0f3b5f; transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
@@ -178,9 +184,7 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
     
-    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        .then(() => { console.log("Persistência ativada."); })
-        .catch((err) => { console.error("Erro na persistência:", err); });
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(console.error);
     
     let currentUser = null;
     let events = [];
@@ -229,16 +233,13 @@
         return events.filter(ev => {
             if (ev.type === 'national' && !showHolidays) return false;
             if (ev.type !== 'national' && !showPersonalEvents) return false;
-            
             const targetStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-            
             if (ev.repeatType === 'permanent') {
                 const s = new Date(ev.start + 'T00:00:00');
                 const e = new Date(ev.end + 'T00:00:00');
                 const startComp = new Date(year, s.getMonth(), s.getDate());
                 const endComp = new Date(year, e.getMonth(), e.getDate());
                 const targetDate = new Date(year, month, day);
-                
                 if (ev.start === ev.end) return s.getMonth() === month && s.getDate() === day;
                 return targetDate >= startComp && targetDate <= endComp;
             } else {
@@ -251,13 +252,7 @@
     async function addEvent(event) {
         event.id = Date.now();
         events.push(event);
-        try {
-            if (currentUser) {
-                await db.collection("users").doc(currentUser.uid).update({
-                    events: firebase.firestore.FieldValue.arrayUnion(event)
-                });
-            }
-        } catch(e) { console.error(e); }
+        if (currentUser) await db.collection("users").doc(currentUser.uid).update({ events: firebase.firestore.FieldValue.arrayUnion(event) });
         renderCurrentView();
         renderCadastroList();
     }
@@ -265,13 +260,7 @@
     async function deleteEvent(id) {
         const eventToRemove = events.find(e => e.id == id);
         events = events.filter(e => e.id != id);
-        try {
-            if (currentUser && eventToRemove) {
-                await db.collection("users").doc(currentUser.uid).update({
-                    events: firebase.firestore.FieldValue.arrayRemove(eventToRemove)
-                });
-            }
-        } catch(e) { console.error(e); }
+        if (currentUser && eventToRemove) await db.collection("users").doc(currentUser.uid).update({ events: firebase.firestore.FieldValue.arrayRemove(eventToRemove) });
         renderCurrentView();
         renderCadastroList();
     }
@@ -286,7 +275,8 @@
     
     function renderMonthView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-        document.getElementById('dynamicViewContainer').innerHTML = `
+        const container = document.getElementById('dynamicViewContainer');
+        container.innerHTML = `
             <div class="month-nav"><button id="prevMonthBtn">◀ Mês anterior</button><span class="current-month">${monthNames[currentMonth]} ${currentYear}</span><button id="nextMonthBtn">Próximo mês ▶</button></div>
             <div id="monthGrid"></div>
         `;
@@ -304,11 +294,8 @@
             const evs = getEventsForDate(y, m, d);
             let evHtml = '';
             for (const ev of evs) {
-                if (ev.start !== ev.end) {
-                    evHtml += `<div class="event-item bar-event" style="background:#e9ecef; border-left: 4px solid ${ev.color};">📅 ${ev.name}</div>`;
-                } else {
-                    evHtml += `<div class="event-item" style="background:#e9ecef; border-left: 4px solid ${ev.color};">${ev.name}</div>`;
-                }
+                if (ev.start !== ev.end) evHtml += `<div class="event-item bar-event" style="background:#e9ecef; border-left: 4px solid ${ev.color};">📅 ${ev.name}</div>`;
+                else evHtml += `<div class="event-item" style="background:#e9ecef; border-left: 4px solid ${ev.color};">${ev.name}</div>`;
             }
             const cls = cell.current ? '' : 'other-month';
             html += `<div class="calendar-day ${cls}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="day-number">${d}</div><div class="event-list">${evHtml || '—'}</div></div>`;
@@ -324,15 +311,10 @@
     
     function renderQuarterView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-        document.getElementById('dynamicViewContainer').innerHTML = `
-            <div class="quarter-nav">
-                <button id="prevQuarterBtn">◀ Trimestre anterior</button>
-                <span>A partir de: ${monthNames[currentMonth]} ${currentYear}</span>
-                <button id="nextQuarterBtn">Próximo trimestre ▶</button>
-            </div>
-            <div class="quarter-view-container">
-                <div class="quarter-grid" id="quarterGrid"></div>
-            </div>
+        const container = document.getElementById('dynamicViewContainer');
+        container.innerHTML = `
+            <div class="quarter-nav"><button id="prevQuarterBtn">◀ Trimestre anterior</button><span>A partir de: ${monthNames[currentMonth]} ${currentYear}</span><button id="nextQuarterBtn">Próximo trimestre ▶</button></div>
+            <div class="quarter-view-container"><div class="quarter-grid" id="quarterGrid"></div></div>
         `;
         const grid = document.getElementById('quarterGrid');
         grid.innerHTML = '';
@@ -353,9 +335,7 @@
                 const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
                 const evs = getEventsForDate(y, m, d);
                 let evHtml = '';
-                for (const ev of evs) {
-                    evHtml += `<div class="small-event-item" style="background:#e9ecef; border-left: 2px solid ${ev.color};">${ev.name.substring(0,9)}</div>`;
-                }
+                for (const ev of evs) evHtml += `<div class="small-event-item" style="background:#e9ecef; border-left: 2px solid ${ev.color};">${ev.name.substring(0,9)}</div>`;
                 gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="small-day-number">${d}</div><div>${evHtml || ''}</div></div>`;
             }
             monthDiv.innerHTML += gridHtml + `</div>`;
@@ -386,9 +366,7 @@
                 const y = cell.date.getFullYear(), monthIdx = cell.date.getMonth(), d = cell.day;
                 const evs = getEventsForDate(y, monthIdx, d);
                 let evHtml = '';
-                for (const ev of evs) {
-                    evHtml += `<div class="small-event-item" style="background:#e9ecef; border-left: 2px solid ${ev.color};">${ev.name.substring(0,9)}</div>`;
-                }
+                for (const ev of evs) evHtml += `<div class="small-event-item" style="background:#e9ecef; border-left: 2px solid ${ev.color};">${ev.name.substring(0,9)}</div>`;
                 gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${monthIdx}" data-day="${d}"><div class="small-day-number">${d}</div><div>${evHtml || ''}</div></div>`;
             }
             html += gridHtml + `</div></div>`;
@@ -404,16 +382,10 @@
     }
     
     function renderCurrentView() {
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.view === currentView);
-        });
         if (currentView === 'month') renderMonthView();
         else if (currentView === 'quarter') renderQuarterView();
         else if (currentView === 'year') renderYearView();
         else renderMonthView();
-        
-        const mainContent = document.querySelector('.main-content');
-        if (mainContent) mainContent.scrollTop = 0;
     }
     
     let currentEditingId = null;
@@ -444,18 +416,14 @@
             const repeatType = modal.querySelector('#repeatType').value;
             const selectedSwatch = palette.querySelector('.palette-swatch.selected');
             const color = selectedSwatch ? selectedSwatch.dataset.color : SOLID_COLORS[0];
-            
             if (!name || !startDate) { alert("Preencha o nome e a data de início"); return; }
             if (!endDate) endDate = startDate;
             if (startDate > endDate) { alert("Data final não pode ser anterior à inicial"); return; }
-            
             if (isEdit) {
                 const index = events.findIndex(e => e.id == currentEditingId);
                 if (index !== -1) {
                     events[index] = { ...events[index], name, start: startDate, end: endDate, repeatType, color };
-                    try {
-                        if (currentUser) await db.collection("users").doc(currentUser.uid).set({ events: events });
-                    } catch(e) { console.error(e); }
+                    if (currentUser) await db.collection("users").doc(currentUser.uid).set({ events: events });
                 }
             } else {
                 await addEvent({ name, type, start: startDate, end: endDate, repeatType, color });
@@ -473,7 +441,7 @@
         eventosDiv.innerHTML = events.filter(e => e.type !== 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}${ev.start !== ev.end ? ` até ${ev.end}` : ''}</small><br><small style="color:${ev.color};">● Cor: ${ev.color}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:20px;">Nenhum afastamento cadastrado</div>';
         feriadosDiv.innerHTML = events.filter(e => e.type === 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}</small><br><small style="color:${ev.color};">● Cor: ${ev.color}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center; padding:20px;">Nenhum feriado cadastrado</div>';
         document.querySelectorAll('.edit-event-btn').forEach(btn => btn.onclick = () => { const ev = events.find(e => e.id == btn.dataset.id); if (ev) openEventModal(ev.type, ev); });
-        document.querySelectorAll('.delete-event-btn').forEach(btn => btn.onclick = async () => { if (confirm("Tem certeza que deseja excluir este item?")) await deleteEvent(parseInt(btn.dataset.id)); });
+        document.querySelectorAll('.delete-event-btn').forEach(btn => btn.onclick = async () => { if (confirm("Excluir?")) await deleteEvent(parseInt(btn.dataset.id)); });
     }
     
     function openCadastroModal() {
@@ -487,12 +455,13 @@
         modal.querySelector('#closeCadastroBtn').onclick = () => modal.remove();
     }
     
-    function generatePDF() { alert("📄 Utilize Ctrl+P no teclado para salvar ou imprimir com design limpo."); }
+    function generatePDF() { alert("📄 Utilize Ctrl+P no teclado para salvar ou imprimir."); }
     
     function renderMainApp() {
         const userEmail = currentUser?.email || "usuario@aps.gov.br";
         const initialLetter = userEmail.charAt(0).toUpperCase();
 
+        // Estrutura FIXA: cabeçalho e barra de ferramentas nunca são recriados
         document.getElementById('app').innerHTML = `
             <div class="app-container">
                 <div class="page-main-title">
@@ -506,35 +475,42 @@
                         <button class="logout-btn" id="logoutBtn">Sair</button>
                     </div>
                 </div>
-                <div class="main-content">
-                    <div class="main-calendar">
-                        <div class="toolbar">
-                            <div class="view-buttons">
-                                <button class="view-btn ${currentView === 'month' ? 'active' : ''}" data-view="month">📆 Mês</button>
-                                <button class="view-btn ${currentView === 'quarter' ? 'active' : ''}" data-view="quarter">📚 Trimestre</button>
-                                <button class="view-btn ${currentView === 'year' ? 'active' : ''}" data-view="year">🗓️ Ano</button>
-                            </div>
-                            <div class="action-buttons">
-                                <button class="action-btn" id="btnFeriado">➕ Feriado</button>
-                                <button class="action-btn" id="btnEvento">📌 + Afastamento</button>
-                                <button class="action-btn" id="btnCadastro">📋 Cadastros</button>
-                                <button class="action-btn toggle-btn ${showHolidays ? 'active-toggle' : ''}" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button>
-                                <button class="action-btn toggle-btn ${showPersonalEvents ? 'active-toggle' : ''}" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Afastamentos</button>
-                                <button class="action-btn" id="btnPDF">📄 Gerar PDF</button>
-                            </div>
+                <div class="toolbar-fixed">
+                    <div class="toolbar-row">
+                        <div class="view-buttons">
+                            <button class="view-btn" data-view="month">📆 Mês</button>
+                            <button class="view-btn" data-view="quarter">📚 Trimestre</button>
+                            <button class="view-btn" data-view="year">🗓️ Ano</button>
                         </div>
-                        <div id="dynamicViewContainer"></div>
-                        <footer>Dados sincronizados na nuvem • Visualizações com largura consistente</footer>
+                        <div class="action-buttons">
+                            <button class="action-btn" id="btnFeriado">➕ Feriado</button>
+                            <button class="action-btn" id="btnEvento">📌 + Afastamento</button>
+                            <button class="action-btn" id="btnCadastro">📋 Cadastros</button>
+                            <button class="action-btn toggle-btn" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button>
+                            <button class="action-btn toggle-btn" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Afastamentos</button>
+                            <button class="action-btn" id="btnPDF">📄 Gerar PDF</button>
+                        </div>
                     </div>
                 </div>
+                <div class="content-area" id="dynamicViewContainer"></div>
             </div>
         `;
-        document.querySelectorAll('.view-btn').forEach(btn => btn.onclick = () => { currentView = btn.dataset.view; renderCurrentView(); });
+        
+        // Atualizar estado visual dos botões de visualização
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === currentView);
+            btn.onclick = () => {
+                currentView = btn.dataset.view;
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderCurrentView();
+            };
+        });
+        
+        // Botões de ação (nunca mudam)
         document.getElementById('logoutBtn').onclick = async () => { 
             lockAuthStream = true;
-            currentUser = null; 
-            events = [...DEFAULT_HOLIDAYS]; 
-            try { await auth.signOut(); } catch(e){}
+            await auth.signOut();
             lockAuthStream = false;
             renderLoginScreen();
         };
@@ -542,8 +518,13 @@
         document.getElementById('btnEvento').onclick = () => openEventModal('personal');
         document.getElementById('btnCadastro').onclick = openCadastroModal;
         document.getElementById('btnPDF').onclick = generatePDF;
-        document.getElementById('btnToggleFeriados').onclick = () => { showHolidays = !showHolidays; renderCurrentView(); document.getElementById('btnToggleFeriados').classList.toggle('active-toggle', showHolidays); document.getElementById('btnToggleFeriados').innerText = `🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados`; };
-        document.getElementById('btnToggleEventos').onclick = () => { showPersonalEvents = !showPersonalEvents; renderCurrentView(); document.getElementById('btnToggleEventos').classList.toggle('active-toggle', showPersonalEvents); document.getElementById('btnToggleEventos').innerText = `👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Afastamentos`; };
+        
+        const toggleFeriados = document.getElementById('btnToggleFeriados');
+        const toggleEventos = document.getElementById('btnToggleEventos');
+        toggleFeriados.onclick = () => { showHolidays = !showHolidays; toggleFeriados.classList.toggle('active-toggle', showHolidays); toggleFeriados.innerText = `🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados`; renderCurrentView(); };
+        toggleEventos.onclick = () => { showPersonalEvents = !showPersonalEvents; toggleEventos.classList.toggle('active-toggle', showPersonalEvents); toggleEventos.innerText = `👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Afastamentos`; renderCurrentView(); };
+        
+        // Inicializar visualização
         renderCurrentView();
     }
     
@@ -564,42 +545,23 @@
         document.getElementById('loginBtn').onclick = async () => {
             const email = document.getElementById('inputEmail').value.trim();
             const password = document.getElementById('inputPassword').value.trim();
-            if(!email || !password) { errorMsg.innerText = "Preencha o e-mail e a senha."; return; }
-            errorMsg.innerText = "A autenticar...";
-            try { await auth.signInWithEmailAndPassword(email, password); } catch(err) { errorMsg.innerText = parseFirebaseError(err.code); }
+            if(!email || !password) { errorMsg.innerText = "Preencha e-mail e senha."; return; }
+            try { await auth.signInWithEmailAndPassword(email, password); } catch(err) { errorMsg.innerText = err.message; }
         };
         document.getElementById('registerBtn').onclick = async () => {
             const email = document.getElementById('inputEmail').value.trim();
             const password = document.getElementById('inputPassword').value.trim();
-            if(!email || !password) { errorMsg.innerText = "Insira um e-mail e crie uma senha válida."; return; }
-            if(password.length < 6) { errorMsg.innerText = "A senha deve ter pelo menos 6 caracteres."; return; }
-            errorMsg.innerText = "A criar usuário...";
-            try { await auth.createUserWithEmailAndPassword(email, password); } catch(err) { errorMsg.innerText = parseFirebaseError(err.code); }
+            if(!email || !password || password.length < 6) { errorMsg.innerText = "Preencha e-mail e senha com 6+ caracteres."; return; }
+            try { await auth.createUserWithEmailAndPassword(email, password); } catch(err) { errorMsg.innerText = err.message; }
         };
-    }
-
-    function parseFirebaseError(code) {
-        switch (code) {
-            case 'auth/invalid-email': return 'Formato de e-mail inválido.';
-            case 'auth/user-not-found': return 'Usuário não encontrado. Crie uma conta.';
-            case 'auth/wrong-password': return 'Senha incorreta.';
-            case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
-            case 'auth/weak-password': return 'A senha é muito fraca.';
-            case 'auth/network-request-failed': return 'Erro de conexão. Verifique a internet.';
-            default: return 'Ocorreu um erro: ' + code;
-        }
     }
     
     auth.onAuthStateChanged(async (user) => {
         if (user) {
-            lockAuthStream = false;
             currentUser = user;
             await loadUserEvents(user.uid);
         } else {
-            if (!lockAuthStream) {
-                currentUser = null;
-                renderLoginScreen();
-            }
+            if (!lockAuthStream) renderLoginScreen();
         }
     });
 </script>
