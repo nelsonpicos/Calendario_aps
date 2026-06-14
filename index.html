@@ -35,34 +35,10 @@
         .auth-error { color: #dc2626; font-size: 0.85rem; margin-top: 15px; min-height: 20px; font-weight: 500; }
         .loading { text-align: center; padding: 40px; color: #1b5e7a; font-weight: bold; font-size: 1.2rem; }
         
-        /* APP PRINCIPAL - CABEÇALHO TOTALMENTE FIXO */
-        .app-container { 
-            max-width: 1400px; 
-            width: 100%; 
-            background: white; 
-            border-radius: 32px; 
-            box-shadow: 0 20px 35px rgba(0,0,0,0.1); 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            height: 90vh;
-            max-height: 90vh;
-        }
+        /* APP PRINCIPAL */
+        .app-container { max-width: 1400px; width: 100%; background: white; border-radius: 32px; box-shadow: 0 20px 35px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 90vh; max-height: 90vh; }
         
-        .page-main-title { 
-            background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); 
-            color: white; 
-            padding: 20px 28px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            flex-wrap: wrap; 
-            gap: 20px; 
-            flex-shrink: 0;
-            min-height: 85px;
-            z-index: 1000; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-        }
+        .page-main-title { background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); color: white; padding: 20px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; flex-shrink: 0; min-height: 85px; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .title-group { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
         .title-group h1 { margin: 0; font-size: 1.6rem; font-weight: bold; line-height: 1; }
         .title-copyright { font-size: 0.85rem; color: rgba(255,255,255,0.85); font-weight: normal; white-space: nowrap; }
@@ -73,32 +49,13 @@
         .logout-btn { background: white; color: #1b5e7a; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 0.85rem; flex-shrink: 0; }
         .logout-btn:hover { background: #f1f5f9; }
 
-        /* BARRA DE FERRAMENTAS - FIXA */
-        .toolbar-fixed {
-            flex-shrink: 0;
-            background: white;
-            border-bottom: 2px solid #e2edf2;
-            padding: 16px 28px 12px 28px;
-        }
-        .toolbar-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+        .toolbar-fixed { flex-shrink: 0; background: white; border-bottom: 2px solid #e2edf2; padding: 16px 28px 12px 28px; }
+        .toolbar-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         .view-buttons, .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
         .view-btn, .action-btn { background: #f8fafc; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 18px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .view-btn.active, .action-btn.active-toggle { background: #2c7da0; color: white; border-color: #2c7da0; }
         
-        /* ÁREA DE CONTEÚDO DINÂMICA */
-        .content-area {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: auto;
-            background: #f8fafc;
-            padding: 24px 28px;
-        }
+        .content-area { flex: 1; overflow-y: auto; overflow-x: auto; background: #f8fafc; padding: 24px 28px; }
         
         /* MÊS */
         .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; background: #6c757d; color: white; border-radius: 16px; padding: 12px 0; margin-bottom: 16px; font-size: 0.95rem; }
@@ -108,13 +65,43 @@
         .calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
         .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 8px; text-align: right; color: #212529; }
         .event-list { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; }
-        .event-item { border-radius: 12px; padding: 3px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; font-weight: 500; }
+        
+        /* EVENTOS COM TOOLTIP E TEXTO LEGÍVEL */
+        .event-item { 
+            border-radius: 12px; 
+            padding: 3px 6px; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            color: #000000 !important; 
+            font-weight: 600; 
+            text-shadow: 0 0 2px rgba(255,255,255,0.8);
+            cursor: help;
+            position: relative;
+        }
+        .event-item:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 0;
+            background: #1f2937;
+            color: white;
+            font-size: 0.7rem;
+            padding: 6px 10px;
+            border-radius: 12px;
+            white-space: normal;
+            z-index: 200;
+            width: max-content;
+            max-width: 300px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-shadow: none;
+        }
         
         .month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .month-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; border: none; font-size: 0.9rem; }
         .current-month { font-size: 1.4rem; font-weight: bold; color: #212529; }
         
-        /* TRIMESTRE E ANO - CARDS */
+        /* TRIMESTRE E ANO */
         .quarter-view-container, .year-view-container { width: 100%; overflow-x: auto; }
         .quarter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
         .year-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
@@ -129,7 +116,23 @@
         .small-calendar-day { border: 1px solid #6c757d; border-radius: 8px; min-height: 55px; padding: 4px; cursor: pointer; background: white; }
         .small-calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
         .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; margin-bottom: 3px; color: #212529; }
-        .small-event-item { border-radius: 6px; padding: 2px 4px; margin: 2px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; font-weight: 500; }
+        .small-event-item { border-radius: 6px; padding: 2px 4px; margin: 2px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; font-weight: 500; cursor: help; position: relative; }
+        .small-event-item:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 0;
+            background: #1f2937;
+            color: white;
+            font-size: 0.65rem;
+            padding: 6px 10px;
+            border-radius: 12px;
+            white-space: normal;
+            z-index: 200;
+            width: max-content;
+            max-width: 280px;
+            text-shadow: none;
+        }
 
         .year-selector { display: flex; justify-content: center; gap: 20px; margin-top: 20px; align-items: center; }
         .year-selector button { background: #6c757d; color: white; padding: 6px 20px; border-radius: 40px; border: none; cursor: pointer; }
@@ -149,7 +152,9 @@
         .delete-event-btn { background: #f0b8b8; padding: 5px 12px; border-radius: 20px; border: none; cursor: pointer; font-weight: 500; }
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-weight: 600; font-size: 0.85rem; }
-        .form-group input, .form-group select { padding: 8px 12px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea { padding: 8px 12px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 0.9rem; }
+        .checkbox-group { display: flex; gap: 20px; align-items: center; margin-top: 5px; }
+        .checkbox-group label { display: flex; align-items: center; gap: 6px; font-weight: normal; cursor: pointer; }
         .color-palette { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
         .palette-swatch { width: 40px; height: 40px; border-radius: 12px; cursor: pointer; border: 3px solid transparent; transition: 0.1s; }
         .palette-swatch.selected { border: 3px solid #0f3b5f; transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
@@ -194,15 +199,28 @@
     ];
     
     const DEFAULT_HOLIDAYS = [
-        { id: 1, name: "Confraternização Universal", type: "national", start: "2026-01-01", end: "2026-01-01", repeatType: "permanent", color: "#FF0000" },
-        { id: 2, name: "Tiradentes", type: "national", start: "2026-04-21", end: "2026-04-21", repeatType: "permanent", color: "#FF0000" },
-        { id: 3, name: "Dia do Trabalho", type: "national", start: "2026-05-01", end: "2026-05-01", repeatType: "permanent", color: "#FF0000" },
-        { id: 4, name: "Independência do Brasil", type: "national", start: "2026-09-07", end: "2026-09-07", repeatType: "permanent", color: "#FF0000" },
-        { id: 5, name: "Nossa Senhora Aparecida", type: "national", start: "2026-10-12", end: "2026-10-12", repeatType: "permanent", color: "#FF0000" },
-        { id: 6, name: "Finados", type: "national", start: "2026-11-02", end: "2026-11-02", repeatType: "permanent", color: "#FF0000" },
-        { id: 7, name: "Proclamação da República", type: "national", start: "2026-11-15", end: "2026-11-15", repeatType: "permanent", color: "#FF0000" },
-        { id: 8, name: "Natal", type: "national", start: "2026-12-25", end: "2026-12-25", repeatType: "permanent", color: "#FF0000" }
+        { id: 1, name: "Confraternização Universal", type: "national", start: "2026-01-01", end: "2026-01-01", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" },
+        { id: 2, name: "Tiradentes", type: "national", start: "2026-04-21", end: "2026-04-21", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" },
+        { id: 3, name: "Dia do Trabalho", type: "national", start: "2026-05-01", end: "2026-05-01", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" },
+        { id: 4, name: "Independência", type: "national", start: "2026-09-07", end: "2026-09-07", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" },
+        { id: 5, name: "Aparecida", type: "national", start: "2026-10-12", end: "2026-10-12", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" },
+        { id: 6, name: "Finados", type: "national", start: "2026-11-02", end: "2026-11-02", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" },
+        { id: 7, name: "República", type: "national", start: "2026-11-15", end: "2026-11-15", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" },
+        { id: 8, name: "Natal", type: "national", start: "2026-12-25", end: "2026-12-25", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" }
     ];
+    
+    function countDays(startStr, endStr) {
+        const start = new Date(startStr);
+        const end = new Date(endStr);
+        const diffTime = Math.abs(end - start);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        return diffDays;
+    }
+    
+    function formatTooltip(ev) {
+        const days = countDays(ev.start, ev.end);
+        return `${ev.fullName || ev.name} | ${ev.start} a ${ev.end} | ${ev.eventType || (ev.type === 'national' ? 'Feriado' : 'Afastamento')} | ${days} dias`;
+    }
     
     async function loadUserEvents(userId) {
         try {
@@ -251,9 +269,19 @@
     function showDetailModal(dateStr, eventsOfDay) {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `<div class="modal-container" style="max-width:400px;"><div style="padding:16px 20px;"><h3>📅 ${dateStr}</h3></div><div style="padding:20px;"><ul>${eventsOfDay.length ? eventsOfDay.map(ev => `<li style="border-left:4px solid ${ev.color}; padding-left:12px; margin-bottom:8px;"><strong>${ev.name}</strong></li>`).join('') : '<li>Nenhum afastamento</li>'}</ul><button class="btn-cancel" id="closeModalBtn">Fechar</button></div></div>`;
+        modal.innerHTML = `<div class="modal-container" style="max-width:450px;"><div style="padding:16px 20px;"><h3>📅 ${dateStr}</h3></div><div style="padding:20px;"><ul>${eventsOfDay.length ? eventsOfDay.map(ev => `<li style="border-left:4px solid ${ev.color}; padding-left:12px; margin-bottom:8px;"><strong>${ev.name}</strong><br><small>${ev.fullName || ''} | ${ev.eventType || 'Afastamento'}</small></li>`).join('') : '<li>Nenhum evento</li>'}</ul><button class="btn-cancel" id="closeModalBtn">Fechar</button></div></div>`;
         document.body.appendChild(modal);
         modal.querySelector('#closeModalBtn').onclick = () => modal.remove();
+    }
+    
+    function renderEventElement(ev, isSmall = false) {
+        const tooltipText = formatTooltip(ev);
+        const displayName = ev.name.length > 10 ? ev.name.substring(0,10)+'…' : ev.name;
+        if (isSmall) {
+            return `<div class="small-event-item" style="background:${ev.color};" data-tooltip="${tooltipText.replace(/"/g, '&quot;')}">${displayName}</div>`;
+        } else {
+            return `<div class="event-item" style="background:${ev.color};" data-tooltip="${tooltipText.replace(/"/g, '&quot;')}">📌 ${displayName}</div>`;
+        }
     }
     
     function renderMonthView() {
@@ -275,9 +303,7 @@
             const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
             const evs = getEventsForDate(y, m, d);
             let evHtml = '';
-            for (const ev of evs) {
-                evHtml += `<div class="event-item" style="background:${ev.color}; color:#000; margin-bottom:2px;">📌 ${ev.name}</div>`;
-            }
+            for (const ev of evs) evHtml += renderEventElement(ev, false);
             const cls = cell.current ? '' : 'other-month';
             html += `<div class="calendar-day ${cls}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="day-number">${d}</div><div class="event-list">${evHtml || '—'}</div></div>`;
         }
@@ -304,9 +330,7 @@
             const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
             const evs = getEventsForDate(y, m, d);
             let evHtml = '';
-            for (const ev of evs) {
-                evHtml += `<div class="small-event-item" style="background:${ev.color};">${ev.name.substring(0,9)}</div>`;
-            }
+            for (const ev of evs) evHtml += renderEventElement(ev, true);
             const cls = cell.current ? '' : 'other-month';
             html += `<div class="small-calendar-day ${cls}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="small-day-number">${d}</div><div>${evHtml || ''}</div></div>`;
         }
@@ -361,7 +385,6 @@
         if (currentView === 'month') renderMonthView();
         else if (currentView === 'quarter') renderQuarterView();
         else if (currentView === 'year') renderYearView();
-        else renderMonthView();
     }
     
     let currentEditingId = null;
@@ -370,7 +393,17 @@
         const isEdit = !!eventToEdit;
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.innerHTML = `<div class="modal-container" style="max-width:500px;"><div style="padding:16px 20px;"><h3>${isEdit ? 'Editar' : 'Adicionar'} ${type === 'national' ? 'Feriado' : 'Afastamento'}</h3></div><div style="padding:20px;"><div class="form-group"><label>Nome</label><input type="text" id="eventName" value="${eventToEdit?.name || ''}"></div><div class="form-group"><label>Data Início</label><input type="date" id="startDate" value="${eventToEdit?.start || ''}"></div><div class="form-group"><label>Data Fim</label><input type="date" id="endDate" value="${eventToEdit?.end || ''}"></div><div class="form-group"><label>Repetir</label><select id="repeatType"><option value="single">Somente este ano</option><option value="permanent" ${eventToEdit?.repeatType === 'permanent' ? 'selected' : ''}>Todos os anos</option></select></div><div class="form-group"><label>Cor</label><div class="color-palette" id="colorPaletteModal"></div></div><div class="modal-buttons"><button class="btn-cancel" id="cancelModalBtn">Cancelar</button><button class="btn-save" id="saveModalBtn">${isEdit ? 'Salvar' : 'Adicionar'}</button></div></div></div>`;
+        modal.innerHTML = `<div class="modal-container" style="max-width:550px;"><div style="padding:16px 20px;"><h3>${isEdit ? 'Editar' : 'Adicionar'} ${type === 'national' ? 'Feriado' : 'Afastamento'}</h3></div><div style="padding:20px;">
+            <div class="form-group"><label>Nome (máx. 10 caracteres)</label><input type="text" id="eventName" maxlength="10" value="${eventToEdit?.name || ''}" placeholder="Ex: Férias João"></div>
+            <div class="form-group"><label>Nome completo do servidor (máx. 50)</label><input type="text" id="fullName" maxlength="50" value="${eventToEdit?.fullName || ''}" placeholder="Nome completo"></div>
+            <div class="form-group"><label>Data Início</label><input type="date" id="startDate" value="${eventToEdit?.start || ''}"></div>
+            <div class="form-group"><label>Data Fim</label><input type="date" id="endDate" value="${eventToEdit?.end || ''}"></div>
+            <div class="form-group"><label>Tipo</label><div class="checkbox-group"><label><input type="radio" name="eventTypeRadio" value="Férias" ${eventToEdit?.eventType === 'Férias' || (!eventToEdit && type !== 'national') ? 'checked' : ''}> Férias</label><label><input type="radio" name="eventTypeRadio" value="Afastamento" ${eventToEdit?.eventType === 'Afastamento' ? 'checked' : ''}> Afastamento</label></div></div>
+            <div class="form-group"><label>Descrição (máx. 50)</label><input type="text" id="description" maxlength="50" value="${eventToEdit?.description || ''}" placeholder="Descrição do afastamento"></div>
+            <div class="form-group"><label>Repetir</label><select id="repeatType"><option value="single">📅 Somente este ano</option><option value="permanent" ${eventToEdit?.repeatType === 'permanent' ? 'selected' : ''}>♾️ Todos os anos</option></select></div>
+            <div class="form-group"><label>Cor</label><div class="color-palette" id="colorPaletteModal"></div></div>
+            <div class="modal-buttons"><button class="btn-cancel" id="cancelModalBtn">Cancelar</button><button class="btn-save" id="saveModalBtn">${isEdit ? 'Salvar' : 'Adicionar'}</button></div>
+        </div></div>`;
         document.body.appendChild(modal);
         const palette = modal.querySelector('#colorPaletteModal');
         SOLID_COLORS.forEach(c => { 
@@ -386,21 +419,25 @@
         });
         modal.querySelector('#cancelModalBtn').onclick = () => modal.remove();
         modal.querySelector('#saveModalBtn').onclick = async () => {
-            const name = modal.querySelector('#eventName').value.trim();
+            const name = modal.querySelector('#eventName').value.trim().substring(0,10);
+            const fullName = modal.querySelector('#fullName').value.trim().substring(0,50);
             const startDate = modal.querySelector('#startDate').value;
             let endDate = modal.querySelector('#endDate').value;
+            const eventTypeRadio = modal.querySelector('input[name="eventTypeRadio"]:checked');
+            const eventType = eventTypeRadio ? eventTypeRadio.value : (type === 'national' ? 'Feriado' : 'Férias');
+            const description = modal.querySelector('#description').value.trim().substring(0,50);
             const repeatType = modal.querySelector('#repeatType').value;
             const selected = palette.querySelector('.palette-swatch.selected');
             const color = selected ? selected.dataset.color : SOLID_COLORS[0];
-            if (!name || !startDate) { alert("Preencha nome e data"); return; }
+            if (!name || !startDate) { alert("Preencha o nome e a data de início"); return; }
             if (!endDate) endDate = startDate;
-            if (startDate > endDate) { alert("Data final inválida"); return; }
+            if (startDate > endDate) { alert("Data final não pode ser anterior à inicial"); return; }
             if (isEdit) {
                 const idx = events.findIndex(e => e.id == currentEditingId);
-                if (idx !== -1) events[idx] = { ...events[idx], name, start: startDate, end: endDate, repeatType, color };
+                if (idx !== -1) events[idx] = { ...events[idx], name, fullName, start: startDate, end: endDate, eventType, description, repeatType, color };
                 if (currentUser) await db.collection("users").doc(currentUser.uid).set({ events: events });
             } else {
-                await addEvent({ name, type, start: startDate, end: endDate, repeatType, color });
+                await addEvent({ name, fullName, type, start: startDate, end: endDate, eventType, description, repeatType, color });
             }
             renderCurrentView();
             renderCadastroList();
@@ -412,8 +449,8 @@
         const eventosDiv = document.getElementById('eventosList');
         const feriadosDiv = document.getElementById('feriadosList');
         if (!eventosDiv) return;
-        eventosDiv.innerHTML = events.filter(e => e.type !== 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}${ev.start !== ev.end ? ` até ${ev.end}` : ''}</small><br><small style="color:${ev.color};">● Cor: ${ev.color}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center;">Nenhum afastamento</div>';
-        feriadosDiv.innerHTML = events.filter(e => e.type === 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}</small><br><small style="color:${ev.color};">● Cor: ${ev.color}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center;">Nenhum feriado</div>';
+        eventosDiv.innerHTML = events.filter(e => e.type !== 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.fullName || ''}<br>${ev.start}${ev.start !== ev.end ? ` até ${ev.end}` : ''}<br>${ev.eventType || 'Afastamento'}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center;">Nenhum afastamento</div>';
+        feriadosDiv.innerHTML = events.filter(e => e.type === 'national').map(ev => `<div class="event-list-item"><div><strong>${ev.name}</strong><br><small>${ev.start}</small></div><div class="event-actions"><button class="edit-event-btn" data-id="${ev.id}">✏️ Editar</button><button class="delete-event-btn" data-id="${ev.id}">🗑️ Excluir</button></div></div>`).join('') || '<div style="text-align:center;">Nenhum feriado</div>';
         document.querySelectorAll('.edit-event-btn').forEach(btn => btn.onclick = () => { const ev = events.find(e => e.id == btn.dataset.id); if (ev) openEventModal(ev.type, ev); });
         document.querySelectorAll('.delete-event-btn').forEach(btn => btn.onclick = async () => { if (confirm("Excluir?")) await deleteEvent(parseInt(btn.dataset.id)); });
     }
@@ -436,67 +473,28 @@
         const initialLetter = userEmail.charAt(0).toUpperCase();
         document.getElementById('app').innerHTML = `
             <div class="app-container">
-                <div class="page-main-title">
-                    <div class="title-group"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><span class="title-copyright">(c) nelson.picos@gmail.com</span></div>
-                    <div class="user-info"><div class="user-avatar">${initialLetter}</div><span class="user-email-display">${userEmail}</span><button class="logout-btn" id="logoutBtn">Sair</button></div>
-                </div>
-                <div class="toolbar-fixed">
-                    <div class="toolbar-row">
-                        <div class="view-buttons">
-                            <button class="view-btn" data-view="month">📆 Mês</button>
-                            <button class="view-btn" data-view="quarter">📚 Trimestre</button>
-                            <button class="view-btn" data-view="year">🗓️ Ano</button>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="action-btn" id="btnFeriado">➕ Feriado</button>
-                            <button class="action-btn" id="btnEvento">📌 + Afastamento</button>
-                            <button class="action-btn" id="btnCadastro">📋 Cadastros</button>
-                            <button class="action-btn toggle-btn" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button>
-                            <button class="action-btn toggle-btn" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Afastamentos</button>
-                            <button class="action-btn" id="btnPDF">📄 Gerar PDF</button>
-                        </div>
-                    </div>
-                </div>
+                <div class="page-main-title"><div class="title-group"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><span class="title-copyright">(c) nelson.picos@gmail.com</span></div><div class="user-info"><div class="user-avatar">${initialLetter}</div><span class="user-email-display">${userEmail}</span><button class="logout-btn" id="logoutBtn">Sair</button></div></div>
+                <div class="toolbar-fixed"><div class="toolbar-row"><div class="view-buttons"><button class="view-btn" data-view="month">📆 Mês</button><button class="view-btn" data-view="quarter">📚 Trimestre</button><button class="view-btn" data-view="year">🗓️ Ano</button></div><div class="action-buttons"><button class="action-btn" id="btnFeriado">➕ Feriado</button><button class="action-btn" id="btnEvento">📌 + Afastamento</button><button class="action-btn" id="btnCadastro">📋 Cadastros</button><button class="action-btn toggle-btn" id="btnToggleFeriados">🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados</button><button class="action-btn toggle-btn" id="btnToggleEventos">👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Afastamentos</button><button class="action-btn" id="btnPDF">📄 Gerar PDF</button></div></div></div>
                 <div class="content-area" id="dynamicViewContainer"></div>
             </div>
         `;
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.view === currentView);
-            btn.onclick = () => { currentView = btn.dataset.view; renderCurrentView(); document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); };
-        });
+        document.querySelectorAll('.view-btn').forEach(btn => { btn.classList.toggle('active', btn.dataset.view === currentView); btn.onclick = () => { currentView = btn.dataset.view; renderCurrentView(); document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }; });
         document.getElementById('logoutBtn').onclick = async () => { lockAuthStream = true; await auth.signOut(); lockAuthStream = false; renderLoginScreen(); };
         document.getElementById('btnFeriado').onclick = () => openEventModal('national');
         document.getElementById('btnEvento').onclick = () => openEventModal('personal');
         document.getElementById('btnCadastro').onclick = openCadastroModal;
         document.getElementById('btnPDF').onclick = generatePDF;
-        const tf = document.getElementById('btnToggleFeriados');
-        const te = document.getElementById('btnToggleEventos');
+        const tf = document.getElementById('btnToggleFeriados'), te = document.getElementById('btnToggleEventos');
         tf.onclick = () => { showHolidays = !showHolidays; tf.classList.toggle('active-toggle', showHolidays); tf.innerText = `🏛️ ${showHolidays ? 'Ocultar' : 'Mostrar'} Feriados`; renderCurrentView(); };
         te.onclick = () => { showPersonalEvents = !showPersonalEvents; te.classList.toggle('active-toggle', showPersonalEvents); te.innerText = `👁️ ${showPersonalEvents ? 'Ocultar' : 'Mostrar'} Afastamentos`; renderCurrentView(); };
         renderCurrentView();
     }
     
     function renderLoginScreen() {
-        document.getElementById('app').innerHTML = `
-            <div class="login-overlay"><div class="login-card"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><p>Digite seu e-mail e senha</p>
-            <div class="form-group-login"><label>E-mail</label><input type="email" id="inputEmail"></div>
-            <div class="form-group-login"><label>Senha</label><input type="password" id="inputPassword"></div>
-            <div class="auth-btn-group"><button class="auth-btn btn-login" id="loginBtn">Entrar</button><button class="auth-btn btn-register" id="registerBtn">Criar Conta</button></div>
-            <div class="auth-error" id="authErrorMsg"></div></div></div>
-        `;
+        document.getElementById('app').innerHTML = `<div class="login-overlay"><div class="login-card"><h1>📅 AGENDA DE FÉRIAS DA APS</h1><p>Digite seu e-mail e senha</p><div class="form-group-login"><label>E-mail</label><input type="email" id="inputEmail"></div><div class="form-group-login"><label>Senha</label><input type="password" id="inputPassword"></div><div class="auth-btn-group"><button class="auth-btn btn-login" id="loginBtn">Entrar</button><button class="auth-btn btn-register" id="registerBtn">Criar Conta</button></div><div class="auth-error" id="authErrorMsg"></div></div></div>`;
         const err = document.getElementById('authErrorMsg');
-        document.getElementById('loginBtn').onclick = async () => {
-            const email = document.getElementById('inputEmail').value.trim();
-            const pwd = document.getElementById('inputPassword').value;
-            if (!email || !pwd) { err.innerText = "Preencha e-mail e senha."; return; }
-            try { await auth.signInWithEmailAndPassword(email, pwd); } catch(e) { err.innerText = e.message; }
-        };
-        document.getElementById('registerBtn').onclick = async () => {
-            const email = document.getElementById('inputEmail').value.trim();
-            const pwd = document.getElementById('inputPassword').value;
-            if (!email || !pwd || pwd.length < 6) { err.innerText = "E-mail e senha com 6+ caracteres."; return; }
-            try { await auth.createUserWithEmailAndPassword(email, pwd); } catch(e) { err.innerText = e.message; }
-        };
+        document.getElementById('loginBtn').onclick = async () => { const email = document.getElementById('inputEmail').value.trim(); const pwd = document.getElementById('inputPassword').value; if (!email || !pwd) { err.innerText = "Preencha e-mail e senha."; return; } try { await auth.signInWithEmailAndPassword(email, pwd); } catch(e) { err.innerText = e.message; } };
+        document.getElementById('registerBtn').onclick = async () => { const email = document.getElementById('inputEmail').value.trim(); const pwd = document.getElementById('inputPassword').value; if (!email || !pwd || pwd.length < 6) { err.innerText = "E-mail e senha com 6+ caracteres."; return; } try { await auth.createUserWithEmailAndPassword(email, pwd); } catch(e) { err.innerText = e.message; } };
     }
     
     auth.onAuthStateChanged(async (user) => {
