@@ -35,7 +35,7 @@
         .auth-error { color: #dc2626; font-size: 0.85rem; margin-top: 15px; min-height: 20px; font-weight: 500; }
         .loading { text-align: center; padding: 40px; color: #1b5e7a; font-weight: bold; font-size: 1.2rem; }
         
-        /* APP PRINCIPAL */
+        /* APP PRINCIPAL - LARGURA FIXA CONSISTENTE */
         .app-container { 
             max-width: 1400px; 
             width: 100%; 
@@ -49,7 +49,7 @@
             max-height: 85vh;
         }
         
-        /* CABEÇALHO FIXO - nunca se move */
+        /* CABEÇALHO FIXO */
         .page-main-title { 
             background: linear-gradient(135deg, #1b5e7a 0%, #2c8cb0 100%); 
             color: white; 
@@ -87,7 +87,7 @@
         
         .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e2edf2; min-height: 55px; }
         .view-buttons, .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-        .view-btn, .action-btn { background: white; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+        .view-btn, .action-btn { background: white; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; background: #f8fafc; }
         .view-btn.active, .action-btn.active-toggle { background: #2c7da0; color: white; border-color: #2c7da0; }
         
         /* ESTILOS DOS DIAS (moldura na mesma cor da linha do cabeçalho) */
@@ -106,9 +106,14 @@
         .month-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; border: none; }
         .current-month { font-size: 1.5rem; font-weight: bold; color: #212529; }
         
-        /* TRIMESTRE - layout responsivo, mesma largura dos outros modos */
+        /* TRIMESTRE - layout com largura fixa consistente (mesmo estilo do mês/ano) */
         .quarter-view-container { width: 100%; overflow-x: auto; }
-        .quarter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; min-width: 0; }
+        .quarter-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, minmax(0, 1fr)); 
+            gap: 20px; 
+            width: 100%;
+        }
         .quarter-nav { display: flex; justify-content: space-between; margin-bottom: 24px; }
         .quarter-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; border: none; cursor: pointer; }
         
@@ -316,7 +321,6 @@
     
     function renderQuarterView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-        // estrutura exatamente igual à do ano, mas com 3 colunas e layout flexível que não quebra o cabeçalho
         document.getElementById('dynamicViewContainer').innerHTML = `
             <div class="quarter-nav">
                 <button id="prevQuarterBtn">◀ Trimestre anterior</button>
@@ -405,7 +409,7 @@
         else if (currentView === 'year') renderYearView();
         else renderMonthView();
         
-        // Garantir o scroll no topo do conteúdo (mas o cabeçalho principal fica fixo)
+        // garantir scroll no topo do conteúdo
         const mainContent = document.querySelector('.main-content');
         if (mainContent) mainContent.scrollTop = 0;
     }
