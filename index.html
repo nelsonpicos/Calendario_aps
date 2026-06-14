@@ -106,8 +106,9 @@
         .month-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; border: none; }
         .current-month { font-size: 1.5rem; font-weight: bold; color: #212529; }
         
-        /* TRIMESTRE */
-        .quarter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        /* TRIMESTRE - layout responsivo, mesma largura dos outros modos */
+        .quarter-view-container { width: 100%; overflow-x: auto; }
+        .quarter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; min-width: 0; }
         .quarter-nav { display: flex; justify-content: space-between; margin-bottom: 24px; }
         .quarter-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; border: none; cursor: pointer; }
         
@@ -117,7 +118,7 @@
         .single-month-grid { background: white; border-radius: 20px; padding: 15px; border: 1px solid #dee2e6; }
         .single-month-title { font-size: 1rem; font-weight: bold; text-align: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #6c757d; }
         
-        /* CARD PEQUENO (trimestre / ano) */
+        /* CARD PEQUENO (trimestre / ano) - mesma estrutura consistente */
         .small-calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.7rem; background: #6c757d; color: white; border-radius: 10px; padding: 6px 0; margin-bottom: 8px; }
         .small-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .small-calendar-day { border: 1px solid #6c757d; border-radius: 8px; min-height: 55px; padding: 4px; cursor: pointer; background: white; }
@@ -315,7 +316,17 @@
     
     function renderQuarterView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-        document.getElementById('dynamicViewContainer').innerHTML = `<div class="quarter-nav"><button id="prevQuarterBtn">◀ Trimestre anterior</button><span>A partir de: ${monthNames[currentMonth]} ${currentYear}</span><button id="nextQuarterBtn">Próximo trimestre ▶</button></div><div class="quarter-grid" id="quarterGrid"></div>`;
+        // estrutura exatamente igual à do ano, mas com 3 colunas e layout flexível que não quebra o cabeçalho
+        document.getElementById('dynamicViewContainer').innerHTML = `
+            <div class="quarter-nav">
+                <button id="prevQuarterBtn">◀ Trimestre anterior</button>
+                <span>A partir de: ${monthNames[currentMonth]} ${currentYear}</span>
+                <button id="nextQuarterBtn">Próximo trimestre ▶</button>
+            </div>
+            <div class="quarter-view-container">
+                <div class="quarter-grid" id="quarterGrid"></div>
+            </div>
+        `;
         const grid = document.getElementById('quarterGrid');
         grid.innerHTML = '';
         for (let i = 0; i < 3; i++) {
@@ -394,7 +405,7 @@
         else if (currentView === 'year') renderYearView();
         else renderMonthView();
         
-        // pequeno ajuste para forçar o scroll no topo do conteúdo (mas sem mover o cabeçalho)
+        // Garantir o scroll no topo do conteúdo (mas o cabeçalho principal fica fixo)
         const mainContent = document.querySelector('.main-content');
         if (mainContent) mainContent.scrollTop = 0;
     }
