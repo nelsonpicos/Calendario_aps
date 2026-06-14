@@ -79,16 +79,17 @@
         .view-btn, .action-btn { background: white; color: #1e4a6e; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
         .view-btn.active, .action-btn.active-toggle { background: #2c7da0; color: white; border-color: #2c7da0; }
         
-        /* ESTILOS DOS DIAS (MOLdura na mesma cor da linha) */
+        /* ESTILOS DOS DIAS (moldura na mesma cor da linha do cabeçalho) */
         .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; background: #6c757d; color: white; border-radius: 16px; padding: 12px 0; margin-bottom: 12px; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .calendar-day { background: white; border: 2px solid #6c757d; border-radius: 12px; min-height: 100px; padding: 8px 6px; cursor: pointer; transition: 0.1s; }
         .calendar-day:hover { background: #f8fafc; transform: scale(0.98); }
         .calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
-        .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 8px; text-align: right; }
+        .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 8px; text-align: right; color: #212529; }
         .event-list { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; }
-        .event-item { border-radius: 14px; padding: 2px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .bar-event { color: white; border-radius: 20px; font-weight: 500; }
+        .event-item { border-radius: 14px; padding: 2px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; background: #f1f5f9; }
+        /* texto preto para eventos normais e também para barras (para manter legibilidade) */
+        .bar-event { font-weight: 500; color: #000000 !important; background-color: #e9ecef; border-left: 4px solid currentColor; }
         
         .month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .month-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; border: none; }
@@ -105,13 +106,13 @@
         .single-month-grid { background: white; border-radius: 20px; padding: 15px; border: 1px solid #dee2e6; }
         .single-month-title { font-size: 1rem; font-weight: bold; text-align: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #6c757d; }
         
-        /* CARD PEQUENO */
+        /* CARD PEQUENO (trimestre / ano) */
         .small-calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.7rem; background: #6c757d; color: white; border-radius: 10px; padding: 6px 0; margin-bottom: 8px; }
         .small-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .small-calendar-day { border: 1px solid #6c757d; border-radius: 8px; min-height: 55px; padding: 4px; cursor: pointer; background: white; }
         .small-calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
-        .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; }
-        .small-event-item { border-radius: 4px; padding: 1px 3px; margin: 1px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: white; }
+        .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; color: #212529; }
+        .small-event-item { border-radius: 4px; padding: 1px 3px; margin: 1px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; background: #e9ecef; font-weight: 500; }
 
         /* MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
@@ -284,9 +285,9 @@
             let evHtml = '';
             for (const ev of evs) {
                 if (ev.start !== ev.end) {
-                    evHtml += `<div class="event-item bar-event" style="background:${ev.color};">📅 ${ev.name}</div>`;
+                    evHtml += `<div class="event-item bar-event" style="background:#e9ecef; color:#000000; border-left: 3px solid ${ev.color};">📅 ${ev.name}</div>`;
                 } else {
-                    evHtml += `<div class="event-item" style="background:${ev.color}; color:white;">${ev.name}</div>`;
+                    evHtml += `<div class="event-item" style="background:#e9ecef; color:#000000; border-left: 3px solid ${ev.color};">${ev.name}</div>`;
                 }
             }
             const cls = cell.current ? '' : 'other-month';
@@ -324,9 +325,9 @@
                 const evs = getEventsForDate(y, m, d);
                 let evHtml = '';
                 for (const ev of evs) {
-                    evHtml += `<div class="small-event-item" style="background:${ev.color};">${ev.name.substring(0,8)}</div>`;
+                    evHtml += `<div class="small-event-item" style="background:#e9ecef; color:#000000; border-left: 2px solid ${ev.color};">${ev.name.substring(0,8)}</div>`;
                 }
-                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="small-day-number">${d}</div>${evHtml || ''}</div>`;
+                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="small-day-number">${d}</div><div class="small-event-list">${evHtml || ''}</div></div>`;
             }
             monthDiv.innerHTML += gridHtml + `</div>`;
             grid.appendChild(monthDiv);
@@ -357,9 +358,9 @@
                 const evs = getEventsForDate(y, monthIdx, d);
                 let evHtml = '';
                 for (const ev of evs) {
-                    evHtml += `<div class="small-event-item" style="background:${ev.color};">${ev.name.substring(0,8)}</div>`;
+                    evHtml += `<div class="small-event-item" style="background:#e9ecef; color:#000000; border-left: 2px solid ${ev.color};">${ev.name.substring(0,8)}</div>`;
                 }
-                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${monthIdx}" data-day="${d}"><div class="small-day-number">${d}</div>${evHtml || ''}</div>`;
+                gridHtml += `<div class="small-calendar-day ${cell.current ? '' : 'other-month'}" data-year="${y}" data-month="${monthIdx}" data-day="${d}"><div class="small-day-number">${d}</div><div class="small-event-list">${evHtml || ''}</div></div>`;
             }
             html += gridHtml + `</div></div>`;
         }
