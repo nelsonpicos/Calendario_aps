@@ -89,8 +89,8 @@
         .day-number { font-weight: bold; font-size: 0.9rem; margin-bottom: 4px; text-align: right; color: #212529; flex-shrink: 0; }
         .event-list { display: flex; flex-direction: column; gap: 2px; flex: 1; }
         
-        /* BARRAS DE EVENTOS - ESTILO GANTT */
-        .event-bar {
+        /* BARRAS DE EVENTOS - ESTILO GANTT CONTÍNUO */
+        .event-bar, .small-event-bar {
             border-radius: 6px;
             padding: 2px 4px;
             font-size: 0.6rem;
@@ -107,21 +107,15 @@
             line-height: 1.3;
             position: relative;
             border-left: 3px solid rgba(0,0,0,0.2);
+            border-right: 3px solid rgba(0,0,0,0.2);
         }
-        .event-bar:hover {
+        .event-bar:hover, .small-event-bar:hover {
             transform: scale(1.02);
             filter: brightness(0.92);
             z-index: 5;
         }
-        .event-bar .bar-label {
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
         
-        /* EVENTO DE UM DIA (não é barra) */
-        .event-single {
+        .event-single, .small-event-single {
             border-radius: 10px;
             padding: 2px 6px;
             font-size: 0.6rem;
@@ -135,7 +129,7 @@
             text-overflow: ellipsis;
             border-left: 3px solid rgba(0,0,0,0.2);
         }
-        .event-single:hover {
+        .event-single:hover, .small-event-single:hover {
             transform: scale(1.02);
             filter: brightness(0.92);
         }
@@ -159,41 +153,17 @@
         .small-calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
         .small-day-number { font-weight: bold; font-size: 0.6rem; text-align: right; margin-bottom: 2px; color: #212529; flex-shrink: 0; }
         .small-event-bar {
-            border-radius: 4px;
-            padding: 1px 3px;
             font-size: 0.5rem;
-            font-weight: 600;
-            color: #000000 !important;
-            text-shadow: 0 0 2px rgba(255,255,255,0.5);
-            cursor: pointer;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
+            padding: 1px 3px;
             min-height: 14px;
             line-height: 1.2;
             border-left: 2px solid rgba(0,0,0,0.2);
-        }
-        .small-event-bar:hover {
-            transform: scale(1.02);
-            filter: brightness(0.92);
+            border-right: 2px solid rgba(0,0,0,0.2);
         }
         .small-event-single {
-            border-radius: 4px;
-            padding: 1px 3px;
             font-size: 0.5rem;
-            font-weight: 600;
-            color: #000000 !important;
-            text-shadow: 0 0 2px rgba(255,255,255,0.5);
-            cursor: pointer;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            padding: 1px 3px;
             border-left: 2px solid rgba(0,0,0,0.2);
-        }
-        .small-event-single:hover {
-            transform: scale(1.02);
-            filter: brightness(0.92);
         }
 
         .year-selector { display: flex; justify-content: center; gap: 20px; margin-top: 20px; align-items: center; }
@@ -325,6 +295,40 @@
         return days;
     }
     
+    function getEventStartInMonth(event, year, month) {
+        // Retorna o dia de início do evento dentro do mês, ou null se não começa neste mês
+        const startDate = new Date(event.start);
+        const endDate = new Date(event.end);
+        // Verifica se o evento intersecta este mês
+        const firstDayOfMonth = new Date(year, month, 1);
+        const lastDayOfMonth = new Date(year, month + 1, 0);
+        
+        if (endDate < firstDayOfMonth || startDate > lastDayOfMonth) {
+            return null; // Não está neste mês
+        }
+        
+        // Se o evento começa antes do mês, o início visual é o primeiro dia do mês
+        if (startDate < firstDayOfMonth) {
+            return 1;
+        }
+        return startDate.getDate();
+    }
+    
+    function getEventEndInMonth(event, year, month) {
+        const startDate = new Date(event.start);
+        const endDate = new Date(event.end);
+        const lastDayOfMonth = new Date(year, month + 1, 0);
+        
+        if (endDate < new Date(year, month, 1) || startDate > lastDayOfMonth) {
+            return null;
+        }
+        
+        if (endDate > lastDayOfMonth) {
+            return lastDayOfMonth.getDate();
+        }
+        return endDate.getDate();
+    }
+    
     // ========== TOOLTIP ==========
     const tooltipBox = document.getElementById('tooltipBox');
     const tooltipOverlay = document.getElementById('tooltipOverlay');
@@ -418,24 +422,78 @@
         });
     }
     
+    function getEventsInMonth(year, month) {
+        const eventsInMonth = [];
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        
+        for (const ev of events) {
+            if (ev.type === 'national' && !showHolidays) continue;
+            if (ev.type !== 'national' && !showPersonalEvents) continue;
+            
+            const startDate = new Date(ev.start);
+            const endDate = new Date(ev.end);
+            
+            if (ev.repeatType === 'permanent') {
+                // Verificar se o evento intersecta este mês
+                const startComp = new Date(year, startDate.getMonth(), startDate.getDate());
+                const endComp = new Date(year, endDate.getMonth(), endDate.getDate());
+                if (ev.start === ev.end) {
+                    if (startComp.getMonth() === month) {
+                        eventsInMonth.push({ ...ev, start: startComp, end: endComp });
+                    }
+                } else {
+                    if (startComp <= lastDay && endComp >= firstDay) {
+                        eventsInMonth.push({ ...ev, start: startComp, end: endComp });
+                    }
+                }
+            } else {
+                const evStart = new Date(ev.start);
+                const evEnd = new Date(ev.end);
+                if (evStart <= lastDay && evEnd >= firstDay) {
+                    eventsInMonth.push({ ...ev, start: evStart, end: evEnd });
+                }
+            }
+        }
+        return eventsInMonth;
+    }
+    
     // ========== ORGANIZAÇÃO DE BARRAS POR SOBREPOSIÇÃO ==========
     function organizeEventBars(eventsList) {
         if (eventsList.length === 0) return [];
         
-        // Para cada evento, determinar os dias que ocupa
         const eventDays = eventsList.map(ev => {
-            const days = getDaysBetween(ev.start, ev.end);
+            const days = [];
+            const current = new Date(ev.start);
+            const end = new Date(ev.end);
+            while (current <= end) {
+                days.push({
+                    year: current.getFullYear(),
+                    month: current.getMonth(),
+                    day: current.getDate()
+                });
+                current.setDate(current.getDate() + 1);
+            }
             return { event: ev, days: days };
         });
         
-        // Organizar em linhas (evitar sobreposição)
         const rows = [];
         for (const item of eventDays) {
             let placed = false;
             for (let row of rows) {
                 let overlap = false;
                 for (const existing of row) {
-                    const existingDays = getDaysBetween(existing.start, existing.end);
+                    const existingDays = [];
+                    const current = new Date(existing.start);
+                    const end = new Date(existing.end);
+                    while (current <= end) {
+                        existingDays.push({
+                            year: current.getFullYear(),
+                            month: current.getMonth(),
+                            day: current.getDate()
+                        });
+                        current.setDate(current.getDate() + 1);
+                    }
                     for (const d of item.days) {
                         if (existingDays.some(ed => ed.year === d.year && ed.month === d.month && ed.day === d.day)) {
                             overlap = true;
@@ -485,21 +543,11 @@
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
         const prevDays = new Date(currentYear, currentMonth, 0).getDate();
         
-        // Coletar TODOS os eventos do mês para organizar as barras
-        const allEventsInMonth = [];
-        for (let d = 1; d <= daysInMonth; d++) {
-            const evs = getEventsForDate(currentYear, currentMonth, d);
-            for (const ev of evs) {
-                if (!allEventsInMonth.some(e => e.id === ev.id)) {
-                    allEventsInMonth.push(ev);
-                }
-            }
-        }
+        // Buscar eventos que ocorrem neste mês
+        const eventsInMonth = getEventsInMonth(currentYear, currentMonth);
         
         // Organizar barras por sobreposição
-        const rows = organizeEventBars(allEventsInMonth);
-        
-        // Mapear cada evento para sua linha
+        const rows = organizeEventBars(eventsInMonth);
         const eventRowMap = {};
         for (let r = 0; r < rows.length; r++) {
             for (const ev of rows[r]) {
@@ -516,16 +564,32 @@
         
         for (const cell of cells) {
             const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
-            const evs = getEventsForDate(y, m, d);
+            
+            // Encontrar eventos que ocorrem neste dia
+            const dayEvents = eventsInMonth.filter(ev => {
+                const startDay = ev.start.getDate();
+                const endDay = ev.end.getDate();
+                const startMonth = ev.start.getMonth();
+                const endMonth = ev.end.getMonth();
+                const startYear = ev.start.getFullYear();
+                const endYear = ev.end.getFullYear();
+                
+                if (ev.start === ev.end) {
+                    return ev.start.getMonth() === m && ev.start.getDate() === d && ev.start.getFullYear() === y;
+                }
+                
+                // Para eventos que atravessam o mês
+                const currentDate = new Date(y, m, d);
+                return currentDate >= ev.start && currentDate <= ev.end;
+            });
             
             // Ordenar eventos por linha
-            const sortedEvs = [...evs].sort((a, b) => (eventRowMap[a.id] || 999) - (eventRowMap[b.id] || 999));
+            const sortedEvs = [...dayEvents].sort((a, b) => (eventRowMap[a.id] || 999) - (eventRowMap[b.id] || 999));
             
             let evHtml = '';
             let lastRow = -1;
             for (const ev of sortedEvs) {
                 const rowIdx = eventRowMap[ev.id] || 0;
-                // Se mudou de linha, adiciona um pequeno espaçamento
                 if (rowIdx > lastRow && lastRow >= 0) {
                     evHtml += '<div style="height:2px;"></div>';
                 }
@@ -551,18 +615,8 @@
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const prevDays = new Date(year, month, 0).getDate();
         
-        // Coletar TODOS os eventos do mês para organizar as barras
-        const allEventsInMonth = [];
-        for (let d = 1; d <= daysInMonth; d++) {
-            const evs = getEventsForDate(year, month, d);
-            for (const ev of evs) {
-                if (!allEventsInMonth.some(e => e.id === ev.id)) {
-                    allEventsInMonth.push(ev);
-                }
-            }
-        }
-        
-        const rows = organizeEventBars(allEventsInMonth);
+        const eventsInMonth = getEventsInMonth(year, month);
+        const rows = organizeEventBars(eventsInMonth);
         const eventRowMap = {};
         for (let r = 0; r < rows.length; r++) {
             for (const ev of rows[r]) {
@@ -578,9 +632,16 @@
         let html = `<div class="small-calendar-header"><div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div></div><div class="small-calendar-grid">`;
         for (const cell of cells) {
             const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
-            const evs = getEventsForDate(y, m, d);
             
-            const sortedEvs = [...evs].sort((a, b) => (eventRowMap[a.id] || 999) - (eventRowMap[b.id] || 999));
+            const dayEvents = eventsInMonth.filter(ev => {
+                if (ev.start === ev.end) {
+                    return ev.start.getMonth() === m && ev.start.getDate() === d && ev.start.getFullYear() === y;
+                }
+                const currentDate = new Date(y, m, d);
+                return currentDate >= ev.start && currentDate <= ev.end;
+            });
+            
+            const sortedEvs = [...dayEvents].sort((a, b) => (eventRowMap[a.id] || 999) - (eventRowMap[b.id] || 999));
             let evHtml = '';
             let lastRow = -1;
             for (const ev of sortedEvs) {
