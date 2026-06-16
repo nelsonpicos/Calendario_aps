@@ -82,7 +82,7 @@
         .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 8px; text-align: right; color: #212529; }
         .event-list { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; }
         
-        /* EVENTOS - COM COR DE FUNDO E TEXTO PRETO - CLICÁVEL */
+        /* EVENTOS - CLICÁVEL INDIVIDUALMENTE */
         .event-item, .small-event-item {
             border-radius: 12px;
             padding: 4px 8px;
@@ -233,30 +233,50 @@
     const tooltipOverlay = document.getElementById('tooltipOverlay');
     let tooltipTimeout = null;
     
-    function showTooltip(text) {
+    function showTooltip(text, element) {
         if (tooltipTimeout) clearTimeout(tooltipTimeout);
+        
+        // Se já estiver mostrando o tooltip para este mesmo elemento, fecha
+        if (activeTooltipEvent === element) {
+            hideTooltip();
+            return;
+        }
+        
         tooltipBox.innerHTML = text.replace(/\n/g, '<br>');
         tooltipBox.classList.add('show');
         tooltipOverlay.classList.add('show');
+        activeTooltipEvent = element;
     }
     
     function hideTooltip() {
         tooltipTimeout = setTimeout(() => {
             tooltipBox.classList.remove('show');
             tooltipOverlay.classList.remove('show');
-        }, 100);
+            activeTooltipEvent = null;
+        }, 50);
     }
     
-    function toggleTooltip(text, eventElement) {
-        if (activeTooltipEvent === eventElement) {
+    function handleEventClick(text, element, event) {
+        event.stopPropagation();
+        showTooltip(text, element);
+    }
+    
+    // Fechar tooltip ao clicar fora (no overlay)
+    tooltipOverlay.addEventListener('click', function() {
+        hideTooltip();
+        activeTooltipEvent = null;
+    });
+    
+    // Fechar tooltip ao clicar em qualquer lugar da página (exceto no evento)
+    document.addEventListener('click', function(e) {
+        // Se o clique não foi em um evento (ou foi no overlay), fecha
+        if (!e.target.closest('.event-item') && !e.target.closest('.small-event-item') && !e.target.closest('.custom-tooltip')) {
             hideTooltip();
             activeTooltipEvent = null;
-            return;
         }
-        activeTooltipEvent = eventElement;
-        showTooltip(text);
-    }
-    window.toggleTooltip = toggleTooltip;
+    });
+    
+    window.handleEventClick = handleEventClick;
     window.hideTooltip = hideTooltip;
     
     const SOLID_COLORS = [
@@ -353,14 +373,14 @@
                          id="${uniqueId}"
                          style="background:${ev.color};" 
                          data-tooltip="${escaped}"
-                         onclick="toggleTooltip(this.dataset.tooltip, this)">${isSmall ? '' : '📌 '}${displayName}</div>`;
+                         onclick="handleEventClick(this.dataset.tooltip, this, event)">${isSmall ? '' : '📌 '}${displayName}</div>`;
         return html;
     }
     
     function renderCalendarHint() {
         return `<div class="calendar-hint">
                     💡 <strong>Dica:</strong> Clique em qualquer feriado, férias ou afastamento para ver os detalhes completos.
-                    <span style="font-size:0.75rem; color:#2c6e9e;">(Clique novamente para fechar)</span>
+                    <span style="font-size:0.75rem; color:#2c6e9e;">(Clique novamente no evento ou fora dele para fechar)</span>
                 </div>`;
     }
     
