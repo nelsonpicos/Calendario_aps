@@ -66,7 +66,7 @@
         .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 8px; text-align: right; color: #212529; }
         .event-list { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; }
         
-        /* EVENTOS COM TOOLTIP (aparece ao passar o mouse) */
+        /* TOOLTIP - CORRIGIDO E FUNCIONAL */
         .event-item { 
             border-radius: 12px; 
             padding: 4px 8px; 
@@ -79,28 +79,47 @@
             cursor: help;
             position: relative;
             transition: 0.1s;
+            display: block;
+            margin-bottom: 2px;
         }
         .event-item:hover {
             transform: scale(1.02);
-            filter: brightness(0.95);
+            filter: brightness(0.92);
         }
-        .event-item:hover::after {
+        /* Tooltip que aparece ao passar o mouse */
+        .event-item[data-tooltip]:hover::after {
             content: attr(data-tooltip);
-            position: absolute;
-            bottom: 130%;
-            left: 0;
+            position: fixed;
+            bottom: auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: #1a2a3a;
             color: #ffffff;
-            font-size: 0.7rem;
-            padding: 8px 12px;
-            border-radius: 12px;
+            font-size: 0.85rem;
+            padding: 14px 20px;
+            border-radius: 16px;
             white-space: normal;
-            z-index: 200;
+            z-index: 9999;
             width: max-content;
-            max-width: 320px;
+            max-width: 400px;
             text-shadow: none;
             font-weight: normal;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            pointer-events: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            line-height: 1.5;
+            text-align: left;
+        }
+        .event-item[data-tooltip]:hover::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 9998;
             pointer-events: none;
         }
         
@@ -123,29 +142,59 @@
         .small-calendar-day { border: 1px solid #6c757d; border-radius: 8px; min-height: 55px; padding: 4px; cursor: pointer; background: white; }
         .small-calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
         .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; margin-bottom: 3px; color: #212529; }
-        .small-event-item { border-radius: 6px; padding: 2px 4px; margin: 2px 0; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000 !important; font-weight: 500; cursor: help; position: relative; }
-        .small-event-item:hover::after {
+        .small-event-item { 
+            border-radius: 6px; 
+            padding: 2px 4px; 
+            margin: 2px 0; 
+            font-size: 0.6rem; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            color: #000000 !important; 
+            font-weight: 500; 
+            cursor: help; 
+            position: relative; 
+            display: block;
+        }
+        .small-event-item[data-tooltip]:hover::after {
             content: attr(data-tooltip);
-            position: absolute;
-            bottom: 130%;
-            left: 0;
+            position: fixed;
+            bottom: auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: #1a2a3a;
             color: white;
-            font-size: 0.65rem;
-            padding: 8px 12px;
-            border-radius: 12px;
+            font-size: 0.85rem;
+            padding: 14px 20px;
+            border-radius: 16px;
             white-space: normal;
-            z-index: 200;
+            z-index: 9999;
             width: max-content;
-            max-width: 280px;
+            max-width: 380px;
             text-shadow: none;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            pointer-events: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            line-height: 1.5;
+            text-align: left;
+        }
+        .small-event-item[data-tooltip]:hover::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 9998;
             pointer-events: none;
         }
 
         .year-selector { display: flex; justify-content: center; gap: 20px; margin-top: 20px; align-items: center; }
         .year-selector button { background: #6c757d; color: white; padding: 6px 20px; border-radius: 40px; border: none; cursor: pointer; }
         
-        /* MODAL - BOTÕES VISÍVEIS */
+        /* MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
         .modal-container { background: white; border-radius: 32px; width: 90%; max-width: 580px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; }
         .modal-container > div:last-child { padding-bottom: 24px; }
@@ -229,7 +278,8 @@
     function formatTooltip(ev) {
         const days = countDays(ev.start, ev.end);
         const tipo = ev.eventType || (ev.type === 'national' ? 'Feriado' : 'Afastamento');
-        return `${ev.fullName || ev.name} | ${ev.start} a ${ev.end} | ${tipo} | ${days} dia(s)`;
+        const nomeCompleto = ev.fullName || ev.name;
+        return `👤 ${nomeCompleto}\n📅 ${ev.start} a ${ev.end}\n📌 ${tipo}\n⏱️ ${days} dia(s)`;
     }
     
     async function loadUserEvents(userId) {
