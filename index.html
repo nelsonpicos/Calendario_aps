@@ -418,9 +418,8 @@
         });
     }
     
-    // ========== FUNÇÃO PARA ORGANIZAR BARRAS POR SOBREPOSIÇÃO ==========
+    // ========== ORGANIZAÇÃO DE BARRAS POR SOBREPOSIÇÃO ==========
     function organizeEventBars(eventsList) {
-        // Separar eventos por dia (para saber quantas linhas são necessárias)
         if (eventsList.length === 0) return [];
         
         // Para cada evento, determinar os dias que ocupa
@@ -436,7 +435,6 @@
             for (let row of rows) {
                 let overlap = false;
                 for (const existing of row) {
-                    // Verificar se os dias se sobrepõem
                     const existingDays = getDaysBetween(existing.start, existing.end);
                     for (const d of item.days) {
                         if (existingDays.some(ed => ed.year === d.year && ed.month === d.month && ed.day === d.day)) {
@@ -459,7 +457,7 @@
         return rows;
     }
     
-    // ========== RENDERIZAÇÃO COM BARRAS ==========
+    // ========== RENDER EVENTO COMO BARRA ==========
     function renderEventBar(ev, isSmall = false, rowIndex = 0) {
         const displayName = ev.name.length > 12 ? ev.name.substring(0,12)+'…' : ev.name;
         const tooltipText = formatTooltip(ev);
@@ -468,14 +466,10 @@
         const className = isSmall ? (isRange ? 'small-event-bar' : 'small-event-single') : (isRange ? 'event-bar' : 'event-single');
         const style = `background:${ev.color}; margin-top:${rowIndex > 0 ? '2px' : '0'};`;
         
-        if (isSmall) {
-            return `<div class="${className}" style="${style}" data-tooltip="${escaped}" onclick="handleEventClick(this.dataset.tooltip, this, event)">${displayName}</div>`;
-        } else {
-            return `<div class="${className}" style="${style}" data-tooltip="${escaped}" onclick="handleEventClick(this.dataset.tooltip, this, event)">${displayName}</div>`;
-        }
+        return `<div class="${className}" style="${style}" data-tooltip="${escaped}" onclick="handleEventClick(this.dataset.tooltip, this, event)">${displayName}</div>`;
     }
     
-    // ========== RENDER MÊS ==========
+    // ========== RENDER MÊS COM BARRAS CONTÍNUAS ==========
     function renderMonthView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
         document.getElementById('dynamicViewContainer').innerHTML = `
@@ -491,26 +485,52 @@
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
         const prevDays = new Date(currentYear, currentMonth, 0).getDate();
         
-        // Coletar todos os eventos do mês e organizar por dia
+        // Coletar TODOS os eventos do mês para organizar as barras
+        const allEventsInMonth = [];
+        for (let d = 1; d <= daysInMonth; d++) {
+            const evs = getEventsForDate(currentYear, currentMonth, d);
+            for (const ev of evs) {
+                if (!allEventsInMonth.some(e => e.id === ev.id)) {
+                    allEventsInMonth.push(ev);
+                }
+            }
+        }
+        
+        // Organizar barras por sobreposição
+        const rows = organizeEventBars(allEventsInMonth);
+        
+        // Mapear cada evento para sua linha
+        const eventRowMap = {};
+        for (let r = 0; r < rows.length; r++) {
+            for (const ev of rows[r]) {
+                eventRowMap[ev.id] = r;
+            }
+        }
+        
         let cells = [];
         for (let i = firstDay - 1; i >= 0; i--) cells.push({ day: prevDays - i, current: false, date: new Date(currentYear, currentMonth - 1, prevDays - i) });
         for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, current: true, date: new Date(currentYear, currentMonth, d) });
         for (let i = cells.length; i < 42; i++) cells.push({ day: i - cells.length + 1, current: false, date: new Date(currentYear, currentMonth + 1, i - cells.length + 1) });
         
-        // Para cada dia, obter eventos e organizar em linhas
         let html = `<div class="calendar-header"><div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div></div><div class="calendar-grid">`;
+        
         for (const cell of cells) {
             const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
             const evs = getEventsForDate(y, m, d);
             
-            // Organizar eventos em linhas (barras sobrepostas ficam em linhas diferentes)
-            const rows = organizeEventBars(evs);
+            // Ordenar eventos por linha
+            const sortedEvs = [...evs].sort((a, b) => (eventRowMap[a.id] || 999) - (eventRowMap[b.id] || 999));
+            
             let evHtml = '';
-            for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
-                const rowEvents = rows[rowIdx];
-                for (const ev of rowEvents) {
-                    evHtml += renderEventBar(ev, false, rowIdx);
+            let lastRow = -1;
+            for (const ev of sortedEvs) {
+                const rowIdx = eventRowMap[ev.id] || 0;
+                // Se mudou de linha, adiciona um pequeno espaçamento
+                if (rowIdx > lastRow && lastRow >= 0) {
+                    evHtml += '<div style="height:2px;"></div>';
                 }
+                evHtml += renderEventBar(ev, false, rowIdx);
+                lastRow = rowIdx;
             }
             
             const cls = cell.current ? '' : 'other-month';
@@ -530,6 +550,26 @@
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const prevDays = new Date(year, month, 0).getDate();
+        
+        // Coletar TODOS os eventos do mês para organizar as barras
+        const allEventsInMonth = [];
+        for (let d = 1; d <= daysInMonth; d++) {
+            const evs = getEventsForDate(year, month, d);
+            for (const ev of evs) {
+                if (!allEventsInMonth.some(e => e.id === ev.id)) {
+                    allEventsInMonth.push(ev);
+                }
+            }
+        }
+        
+        const rows = organizeEventBars(allEventsInMonth);
+        const eventRowMap = {};
+        for (let r = 0; r < rows.length; r++) {
+            for (const ev of rows[r]) {
+                eventRowMap[ev.id] = r;
+            }
+        }
+        
         let cells = [];
         for (let i = firstDay - 1; i >= 0; i--) cells.push({ day: prevDays - i, current: false, date: new Date(year, month - 1, prevDays - i) });
         for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, current: true, date: new Date(year, month, d) });
@@ -540,13 +580,16 @@
             const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
             const evs = getEventsForDate(y, m, d);
             
-            const rows = organizeEventBars(evs);
+            const sortedEvs = [...evs].sort((a, b) => (eventRowMap[a.id] || 999) - (eventRowMap[b.id] || 999));
             let evHtml = '';
-            for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
-                const rowEvents = rows[rowIdx];
-                for (const ev of rowEvents) {
-                    evHtml += renderEventBar(ev, true, rowIdx);
+            let lastRow = -1;
+            for (const ev of sortedEvs) {
+                const rowIdx = eventRowMap[ev.id] || 0;
+                if (rowIdx > lastRow && lastRow >= 0) {
+                    evHtml += '<div style="height:1px;"></div>';
                 }
+                evHtml += renderEventBar(ev, true, rowIdx);
+                lastRow = rowIdx;
             }
             
             const cls = cell.current ? '' : 'other-month';
@@ -610,7 +653,7 @@
         else if (currentView === 'year') renderYearView();
     }
     
-    // ========== RESTANTE DO CÓDIGO (MODAIS, CADASTROS, LOGIN) ==========
+    // ========== MODAIS, CADASTROS, LOGIN ==========
     let currentEditingId = null;
     function openEventModal(type, eventToEdit = null) {
         currentEditingId = eventToEdit?.id || null;
