@@ -70,33 +70,134 @@
         }
         .calendar-hint strong { color: #0f3b5f; }
         
-        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; background: #6c757d; color: white; border-radius: 16px; padding: 12px 0; margin-bottom: 16px; font-size: 0.95rem; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-        .calendar-day { background: white; border: 1px solid #6c757d; border-radius: 12px; min-height: 105px; padding: 8px 6px; cursor: default; transition: 0.1s; }
-        .calendar-day:hover { background: #f8fafc; transform: scale(0.98); }
+        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; background: #6c757d; color: white; border-radius: 16px; padding: 12px 0; margin-bottom: 12px; font-size: 0.9rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .calendar-day { 
+            background: white; 
+            border: 1px solid #6c757d; 
+            border-radius: 10px; 
+            min-height: 80px; 
+            padding: 6px 4px; 
+            cursor: default; 
+            transition: 0.1s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .calendar-day:hover { background: #f8fafc; }
         .calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
-        .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 8px; text-align: right; color: #212529; }
-        .event-list { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; }
+        .day-number { font-weight: bold; font-size: 0.9rem; margin-bottom: 4px; text-align: right; color: #212529; flex-shrink: 0; }
+        .event-list { display: flex; flex-direction: column; gap: 2px; flex: 1; }
         
-        .event-item, .small-event-item {
-            border-radius: 12px;
-            padding: 4px 8px;
+        /* BARRAS DE EVENTOS - ESTILO GANTT */
+        .event-bar {
+            border-radius: 6px;
+            padding: 2px 4px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: #000000 !important;
+            text-shadow: 0 0 2px rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: 0.1s;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            color: #000000 !important;
-            font-weight: 600;
-            text-shadow: 0 0 2px rgba(255,255,255,0.8);
-            cursor: pointer;
+            width: 100%;
+            min-height: 18px;
+            line-height: 1.3;
             position: relative;
-            display: block;
-            margin-bottom: 2px;
-            transition: 0.1s;
+            border-left: 3px solid rgba(0,0,0,0.2);
         }
-        .event-item:hover, .small-event-item:hover {
+        .event-bar:hover {
+            transform: scale(1.02);
+            filter: brightness(0.92);
+            z-index: 5;
+        }
+        .event-bar .bar-label {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        /* EVENTO DE UM DIA (não é barra) */
+        .event-single {
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: #000000 !important;
+            text-shadow: 0 0 2px rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: 0.1s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-left: 3px solid rgba(0,0,0,0.2);
+        }
+        .event-single:hover {
             transform: scale(1.02);
             filter: brightness(0.92);
         }
+        
+        .month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .month-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; border: none; font-size: 0.9rem; }
+        .current-month { font-size: 1.4rem; font-weight: bold; color: #212529; }
+        
+        .quarter-view-container, .year-view-container { width: 100%; overflow-x: auto; }
+        .quarter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%; }
+        .year-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .single-month-grid { background: white; border-radius: 16px; padding: 12px; border: 1px solid #dee2e6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .single-month-title { font-size: 0.9rem; font-weight: bold; text-align: center; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #6c757d; }
+        .quarter-nav { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .quarter-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; border: none; cursor: pointer; font-size: 0.9rem; }
+        .quarter-nav span { font-size: 1rem; font-weight: 500; }
+        
+        .small-calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.6rem; background: #6c757d; color: white; border-radius: 8px; padding: 4px 0; margin-bottom: 6px; }
+        .small-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+        .small-calendar-day { border: 1px solid #6c757d; border-radius: 6px; min-height: 40px; padding: 3px; cursor: default; background: white; display: flex; flex-direction: column; }
+        .small-calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
+        .small-day-number { font-weight: bold; font-size: 0.6rem; text-align: right; margin-bottom: 2px; color: #212529; flex-shrink: 0; }
+        .small-event-bar {
+            border-radius: 4px;
+            padding: 1px 3px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            color: #000000 !important;
+            text-shadow: 0 0 2px rgba(255,255,255,0.5);
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            min-height: 14px;
+            line-height: 1.2;
+            border-left: 2px solid rgba(0,0,0,0.2);
+        }
+        .small-event-bar:hover {
+            transform: scale(1.02);
+            filter: brightness(0.92);
+        }
+        .small-event-single {
+            border-radius: 4px;
+            padding: 1px 3px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            color: #000000 !important;
+            text-shadow: 0 0 2px rgba(255,255,255,0.5);
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-left: 2px solid rgba(0,0,0,0.2);
+        }
+        .small-event-single:hover {
+            transform: scale(1.02);
+            filter: brightness(0.92);
+        }
+
+        .year-selector { display: flex; justify-content: center; gap: 20px; margin-top: 20px; align-items: center; }
+        .year-selector button { background: #6c757d; color: white; padding: 6px 20px; border-radius: 40px; border: none; cursor: pointer; }
         
         .custom-tooltip {
             display: none;
@@ -125,28 +226,6 @@
         .custom-tooltip.show { display: block; }
         .tooltip-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); z-index: 9998; pointer-events: none; }
         .tooltip-overlay.show { display: block; }
-        
-        .month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .month-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; border: none; font-size: 0.9rem; }
-        .current-month { font-size: 1.4rem; font-weight: bold; color: #212529; }
-        
-        .quarter-view-container, .year-view-container { width: 100%; overflow-x: auto; }
-        .quarter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
-        .year-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .single-month-grid { background: white; border-radius: 20px; padding: 15px; border: 1px solid #dee2e6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .single-month-title { font-size: 1rem; font-weight: bold; text-align: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #6c757d; }
-        .quarter-nav { display: flex; justify-content: space-between; margin-bottom: 24px; }
-        .quarter-nav button { background: #6c757d; color: white; padding: 8px 20px; border-radius: 40px; border: none; cursor: pointer; font-size: 0.9rem; }
-        .quarter-nav span { font-size: 1.1rem; font-weight: 500; }
-        
-        .small-calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.7rem; background: #6c757d; color: white; border-radius: 10px; padding: 6px 0; margin-bottom: 8px; }
-        .small-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-        .small-calendar-day { border: 1px solid #6c757d; border-radius: 8px; min-height: 55px; padding: 4px; cursor: default; background: white; }
-        .small-calendar-day.other-month { background: #fafcff; color: #94a3b8; border-color: #cbd5e1; }
-        .small-day-number { font-weight: bold; font-size: 0.7rem; text-align: right; margin-bottom: 3px; color: #212529; }
-
-        .year-selector { display: flex; justify-content: center; gap: 20px; margin-top: 20px; align-items: center; }
-        .year-selector button { background: #6c757d; color: white; padding: 6px 20px; border-radius: 40px; border: none; cursor: pointer; }
         
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
         .modal-container { background: white; border-radius: 32px; width: 90%; max-width: 580px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; }
@@ -205,12 +284,45 @@
     let lockAuthStream = false;
     let activeTooltipEvent = null;
     
-    // ========== FUNÇÃO PARA FORMATAR DATA ==========
+    // ========== FUNÇÕES AUXILIARES ==========
     function formatDate(dateStr) {
         if (!dateStr) return '';
         const parts = dateStr.split('-');
         if (parts.length !== 3) return dateStr;
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    
+    function countDays(startStr, endStr) {
+        const start = new Date(startStr);
+        const end = new Date(endStr);
+        const diffTime = Math.abs(end - start);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        return diffDays;
+    }
+    
+    function formatTooltip(ev) {
+        const days = countDays(ev.start, ev.end);
+        const tipo = ev.eventType || (ev.type === 'national' ? 'Feriado' : 'Afastamento');
+        const nomeCompleto = ev.fullName || ev.name;
+        const dataInicio = formatDate(ev.start);
+        const dataFim = formatDate(ev.end);
+        return `👤 ${nomeCompleto}\n📅 ${dataInicio} a ${dataFim}\n📌 ${tipo}\n⏱️ ${days} dia(s)`;
+    }
+    
+    function getDaysBetween(startStr, endStr) {
+        const start = new Date(startStr);
+        const end = new Date(endStr);
+        const days = [];
+        const current = new Date(start);
+        while (current <= end) {
+            days.push({
+                year: current.getFullYear(),
+                month: current.getMonth(),
+                day: current.getDate()
+            });
+            current.setDate(current.getDate() + 1);
+        }
+        return days;
     }
     
     // ========== TOOLTIP ==========
@@ -249,7 +361,9 @@
     });
     
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('.event-item') && !e.target.closest('.small-event-item') && !e.target.closest('.custom-tooltip')) {
+        if (!e.target.closest('.event-bar') && !e.target.closest('.event-single') && 
+            !e.target.closest('.small-event-bar') && !e.target.closest('.small-event-single') && 
+            !e.target.closest('.custom-tooltip')) {
             hideTooltip();
             activeTooltipEvent = null;
         }
@@ -275,23 +389,6 @@
         { id: 7, name: "República", type: "national", start: "2026-11-15", end: "2026-11-15", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" },
         { id: 8, name: "Natal", type: "national", start: "2026-12-25", end: "2026-12-25", repeatType: "permanent", color: "#FF0000", fullName: "", eventType: "Feriado", description: "" }
     ];
-    
-    function countDays(startStr, endStr) {
-        const start = new Date(startStr);
-        const end = new Date(endStr);
-        const diffTime = Math.abs(end - start);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-        return diffDays;
-    }
-    
-    function formatTooltip(ev) {
-        const days = countDays(ev.start, ev.end);
-        const tipo = ev.eventType || (ev.type === 'national' ? 'Feriado' : 'Afastamento');
-        const nomeCompleto = ev.fullName || ev.name;
-        const dataInicio = formatDate(ev.start);
-        const dataFim = formatDate(ev.end);
-        return `👤 ${nomeCompleto}\n📅 ${dataInicio} a ${dataFim}\n📌 ${tipo}\n⏱️ ${days} dia(s)`;
-    }
     
     async function loadUserEvents(userId) {
         try {
@@ -321,79 +418,114 @@
         });
     }
     
-    async function addEvent(event) {
-        event.id = Date.now();
-        events.push(event);
-        if (currentUser) await db.collection("users").doc(currentUser.uid).update({ events: firebase.firestore.FieldValue.arrayUnion(event) });
-        renderCurrentView();
-        renderCadastroList();
+    // ========== FUNÇÃO PARA ORGANIZAR BARRAS POR SOBREPOSIÇÃO ==========
+    function organizeEventBars(eventsList) {
+        // Separar eventos por dia (para saber quantas linhas são necessárias)
+        if (eventsList.length === 0) return [];
+        
+        // Para cada evento, determinar os dias que ocupa
+        const eventDays = eventsList.map(ev => {
+            const days = getDaysBetween(ev.start, ev.end);
+            return { event: ev, days: days };
+        });
+        
+        // Organizar em linhas (evitar sobreposição)
+        const rows = [];
+        for (const item of eventDays) {
+            let placed = false;
+            for (let row of rows) {
+                let overlap = false;
+                for (const existing of row) {
+                    // Verificar se os dias se sobrepõem
+                    const existingDays = getDaysBetween(existing.start, existing.end);
+                    for (const d of item.days) {
+                        if (existingDays.some(ed => ed.year === d.year && ed.month === d.month && ed.day === d.day)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    if (overlap) break;
+                }
+                if (!overlap) {
+                    row.push(item.event);
+                    placed = true;
+                    break;
+                }
+            }
+            if (!placed) {
+                rows.push([item.event]);
+            }
+        }
+        return rows;
     }
     
-    async function updateEventInList(eventId, updatedEvent) {
-        const idx = events.findIndex(e => e.id == eventId);
-        if (idx !== -1) events[idx] = { ...events[idx], ...updatedEvent };
-        if (currentUser) await db.collection("users").doc(currentUser.uid).set({ events: events });
-        renderCurrentView();
-        renderCadastroList();
-    }
-    
-    async function deleteEvent(id) {
-        const toRemove = events.find(e => e.id == id);
-        events = events.filter(e => e.id != id);
-        if (currentUser && toRemove) await db.collection("users").doc(currentUser.uid).update({ events: firebase.firestore.FieldValue.arrayRemove(toRemove) });
-        renderCurrentView();
-        renderCadastroList();
-    }
-    
-    function renderEventElement(ev, isSmall = false) {
-        const displayName = ev.name.length > 10 ? ev.name.substring(0,10)+'…' : ev.name;
+    // ========== RENDERIZAÇÃO COM BARRAS ==========
+    function renderEventBar(ev, isSmall = false, rowIndex = 0) {
+        const displayName = ev.name.length > 12 ? ev.name.substring(0,12)+'…' : ev.name;
         const tooltipText = formatTooltip(ev);
         const escaped = tooltipText.replace(/"/g, '&quot;');
-        const uniqueId = 'ev_' + Date.now() + '_' + Math.random().toString(36).substring(2,5);
-        const html = `<div class="${isSmall ? 'small-event-item' : 'event-item'}" 
-                         id="${uniqueId}"
-                         style="background:${ev.color};" 
-                         data-tooltip="${escaped}"
-                         onclick="handleEventClick(this.dataset.tooltip, this, event)">${isSmall ? '' : '📌 '}${displayName}</div>`;
-        return html;
+        const isRange = ev.start !== ev.end;
+        const className = isSmall ? (isRange ? 'small-event-bar' : 'small-event-single') : (isRange ? 'event-bar' : 'event-single');
+        const style = `background:${ev.color}; margin-top:${rowIndex > 0 ? '2px' : '0'};`;
+        
+        if (isSmall) {
+            return `<div class="${className}" style="${style}" data-tooltip="${escaped}" onclick="handleEventClick(this.dataset.tooltip, this, event)">${displayName}</div>`;
+        } else {
+            return `<div class="${className}" style="${style}" data-tooltip="${escaped}" onclick="handleEventClick(this.dataset.tooltip, this, event)">${displayName}</div>`;
+        }
     }
     
-    function renderCalendarHint() {
-        return `<div class="calendar-hint">
-                    💡 <strong>Dica:</strong> Clique em qualquer feriado, férias ou afastamento para ver os detalhes completos.
-                    <span style="font-size:0.75rem; color:#2c6e9e;">(Clique novamente no evento ou fora dele para fechar)</span>
-                </div>`;
-    }
-    
+    // ========== RENDER MÊS ==========
     function renderMonthView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
         document.getElementById('dynamicViewContainer').innerHTML = `
-            ${renderCalendarHint()}
+            <div class="calendar-hint">
+                💡 <strong>Dica:</strong> Clique em qualquer feriado, férias ou afastamento para ver os detalhes completos.
+                <span style="font-size:0.75rem; color:#2c6e9e;">(Clique novamente no evento ou fora dele para fechar)</span>
+            </div>
             <div class="month-nav"><button id="prevMonthBtn">◀ Mês anterior</button><span class="current-month">${monthNames[currentMonth]} ${currentYear}</span><button id="nextMonthBtn">Próximo mês ▶</button></div>
             <div id="monthGrid"></div>
         `;
+        
         const firstDay = new Date(currentYear, currentMonth, 1).getDay();
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
         const prevDays = new Date(currentYear, currentMonth, 0).getDate();
+        
+        // Coletar todos os eventos do mês e organizar por dia
         let cells = [];
         for (let i = firstDay - 1; i >= 0; i--) cells.push({ day: prevDays - i, current: false, date: new Date(currentYear, currentMonth - 1, prevDays - i) });
         for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, current: true, date: new Date(currentYear, currentMonth, d) });
         for (let i = cells.length; i < 42; i++) cells.push({ day: i - cells.length + 1, current: false, date: new Date(currentYear, currentMonth + 1, i - cells.length + 1) });
         
+        // Para cada dia, obter eventos e organizar em linhas
         let html = `<div class="calendar-header"><div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div></div><div class="calendar-grid">`;
         for (const cell of cells) {
             const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
             const evs = getEventsForDate(y, m, d);
+            
+            // Organizar eventos em linhas (barras sobrepostas ficam em linhas diferentes)
+            const rows = organizeEventBars(evs);
             let evHtml = '';
-            for (const ev of evs) evHtml += renderEventElement(ev, false);
+            for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
+                const rowEvents = rows[rowIdx];
+                for (const ev of rowEvents) {
+                    evHtml += renderEventBar(ev, false, rowIdx);
+                }
+            }
+            
             const cls = cell.current ? '' : 'other-month';
-            html += `<div class="calendar-day ${cls}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="day-number">${d}</div><div class="event-list">${evHtml || '—'}</div></div>`;
+            html += `<div class="calendar-day ${cls}" data-year="${y}" data-month="${m}" data-day="${d}">
+                        <div class="day-number">${d}</div>
+                        <div class="event-list">${evHtml || ''}</div>
+                    </div>`;
         }
         document.getElementById('monthGrid').innerHTML = html + `</div>`;
+        
         document.getElementById('prevMonthBtn').onclick = () => { let d = new Date(currentYear, currentMonth - 1, 1); currentYear = d.getFullYear(); currentMonth = d.getMonth(); renderMonthView(); };
         document.getElementById('nextMonthBtn').onclick = () => { let d = new Date(currentYear, currentMonth + 1, 1); currentYear = d.getFullYear(); currentMonth = d.getMonth(); renderMonthView(); };
     }
     
+    // ========== RENDER PEQUENO MÊS (Trimestre/Ano) ==========
     function renderSmallMonthGrid(year, month) {
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -407,10 +539,21 @@
         for (const cell of cells) {
             const y = cell.date.getFullYear(), m = cell.date.getMonth(), d = cell.day;
             const evs = getEventsForDate(y, m, d);
+            
+            const rows = organizeEventBars(evs);
             let evHtml = '';
-            for (const ev of evs) evHtml += renderEventElement(ev, true);
+            for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
+                const rowEvents = rows[rowIdx];
+                for (const ev of rowEvents) {
+                    evHtml += renderEventBar(ev, true, rowIdx);
+                }
+            }
+            
             const cls = cell.current ? '' : 'other-month';
-            html += `<div class="small-calendar-day ${cls}" data-year="${y}" data-month="${m}" data-day="${d}"><div class="small-day-number">${d}</div><div>${evHtml || ''}</div></div>`;
+            html += `<div class="small-calendar-day ${cls}" data-year="${y}" data-month="${m}" data-day="${d}">
+                        <div class="small-day-number">${d}</div>
+                        ${evHtml || ''}
+                    </div>`;
         }
         html += `</div>`;
         return html;
@@ -419,7 +562,10 @@
     function renderQuarterView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
         document.getElementById('dynamicViewContainer').innerHTML = `
-            ${renderCalendarHint()}
+            <div class="calendar-hint">
+                💡 <strong>Dica:</strong> Clique em qualquer feriado, férias ou afastamento para ver os detalhes completos.
+                <span style="font-size:0.75rem; color:#2c6e9e;">(Clique novamente no evento ou fora dele para fechar)</span>
+            </div>
             <div class="quarter-nav"><button id="prevQuarterBtn">◀ Trimestre anterior</button><span>A partir de: ${monthNames[currentMonth]} ${currentYear}</span><button id="nextQuarterBtn">Próximo trimestre ▶</button></div>
             <div class="quarter-view-container"><div class="quarter-grid" id="quarterGrid"></div></div>
         `;
@@ -439,7 +585,10 @@
     
     function renderYearView() {
         document.getElementById('dynamicViewContainer').innerHTML = `
-            ${renderCalendarHint()}
+            <div class="calendar-hint">
+                💡 <strong>Dica:</strong> Clique em qualquer feriado, férias ou afastamento para ver os detalhes completos.
+                <span style="font-size:0.75rem; color:#2c6e9e;">(Clique novamente no evento ou fora dele para fechar)</span>
+            </div>
             <div class="year-view-container"><div class="year-grid" id="yearGrid"></div><div class="year-selector"><button id="prevYearBtn">◀ ${currentYear-1}</button><span>${currentYear}</span><button id="nextYearBtn">${currentYear+1} ▶</button></div></div>
         `;
         const grid = document.getElementById('yearGrid');
@@ -461,6 +610,7 @@
         else if (currentView === 'year') renderYearView();
     }
     
+    // ========== RESTANTE DO CÓDIGO (MODAIS, CADASTROS, LOGIN) ==========
     let currentEditingId = null;
     function openEventModal(type, eventToEdit = null) {
         currentEditingId = eventToEdit?.id || null;
@@ -513,6 +663,30 @@
             }
             modal.remove();
         };
+    }
+    
+    async function addEvent(event) {
+        event.id = Date.now();
+        events.push(event);
+        if (currentUser) await db.collection("users").doc(currentUser.uid).update({ events: firebase.firestore.FieldValue.arrayUnion(event) });
+        renderCurrentView();
+        renderCadastroList();
+    }
+    
+    async function updateEventInList(eventId, updatedEvent) {
+        const idx = events.findIndex(e => e.id == eventId);
+        if (idx !== -1) events[idx] = { ...events[idx], ...updatedEvent };
+        if (currentUser) await db.collection("users").doc(currentUser.uid).set({ events: events });
+        renderCurrentView();
+        renderCadastroList();
+    }
+    
+    async function deleteEvent(id) {
+        const toRemove = events.find(e => e.id == id);
+        events = events.filter(e => e.id != id);
+        if (currentUser && toRemove) await db.collection("users").doc(currentUser.uid).update({ events: firebase.firestore.FieldValue.arrayRemove(toRemove) });
+        renderCurrentView();
+        renderCadastroList();
     }
     
     function renderCadastroList() {
