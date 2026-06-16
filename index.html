@@ -66,7 +66,7 @@
         .day-number { font-weight: bold; font-size: 1rem; margin-bottom: 8px; text-align: right; color: #212529; }
         .event-list { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; }
         
-        /* EVENTOS */
+        /* EVENTOS - COM COR DE FUNDO E TEXTO PRETO */
         .event-item, .small-event-item {
             border-radius: 12px;
             padding: 4px 8px;
@@ -76,7 +76,7 @@
             color: #000000 !important;
             font-weight: 600;
             text-shadow: 0 0 2px rgba(255,255,255,0.8);
-            cursor: help;
+            cursor: pointer;
             position: relative;
             display: block;
             margin-bottom: 2px;
@@ -115,7 +115,6 @@
         .custom-tooltip.show {
             display: block;
         }
-        /* Overlay escuro de fundo */
         .tooltip-overlay {
             display: none;
             position: fixed;
@@ -184,7 +183,7 @@
 <body>
 <div id="app"><div class="loading">Iniciando agenda com segurança...</div></div>
 
-<!-- Tooltip global (aparece fora da célula) -->
+<!-- Tooltip global -->
 <div id="tooltipOverlay" class="tooltip-overlay"></div>
 <div id="tooltipBox" class="custom-tooltip"></div>
 
@@ -212,7 +211,7 @@
     let showPersonalEvents = true;
     let lockAuthStream = false;
     
-    // Elementos do tooltip global
+    // Tooltip
     const tooltipBox = document.getElementById('tooltipBox');
     const tooltipOverlay = document.getElementById('tooltipOverlay');
     let tooltipTimeout = null;
@@ -230,6 +229,8 @@
             tooltipOverlay.classList.remove('show');
         }, 100);
     }
+    window.showTooltip = showTooltip;
+    window.hideTooltip = hideTooltip;
     
     const SOLID_COLORS = [
         "#FF0000", "#0000FF", "#008000", "#FFA500", "#800080", 
@@ -327,18 +328,14 @@
     function renderEventElement(ev, isSmall = false) {
         const displayName = ev.name.length > 10 ? ev.name.substring(0,10)+'…' : ev.name;
         const tooltipText = formatTooltip(ev);
-        const escapedTooltip = tooltipText.replace(/"/g, '&quot;');
-        // Usamos atributo data-tooltip e eventos JavaScript para mostrar o tooltip fora da célula
-        if (isSmall) {
-            return `<div class="small-event-item" style="background:${ev.color};" data-tooltip="${escapedTooltip}" onmouseenter="showTooltip(this.dataset.tooltip)" onmouseleave="hideTooltip()">${displayName}</div>`;
-        } else {
-            return `<div class="event-item" style="background:${ev.color};" data-tooltip="${escapedTooltip}" onmouseenter="showTooltip(this.dataset.tooltip)" onmouseleave="hideTooltip()">📌 ${displayName}</div>`;
-        }
+        const escaped = tooltipText.replace(/"/g, '&quot;');
+        const html = `<div class="${isSmall ? 'small-event-item' : 'event-item'}" 
+                         style="background:${ev.color};" 
+                         data-tooltip="${escaped}"
+                         onmouseenter="showTooltip(this.dataset.tooltip)"
+                         onmouseleave="hideTooltip()">${isSmall ? '' : '📌 '}${displayName}</div>`;
+        return html;
     }
-    
-    // Expor funções globalmente para o HTML
-    window.showTooltip = showTooltip;
-    window.hideTooltip = hideTooltip;
     
     function renderMonthView() {
         const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
